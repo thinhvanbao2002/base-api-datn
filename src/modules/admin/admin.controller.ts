@@ -1,34 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AdminService } from './admin.service';
-import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
+import { Delete, Get, Param, Put, Query, UseGuards } from "@nestjs/common";
+import { AdminService } from "./admin.service";
+import { GenericController } from "src/common/decorators/controller.decoretor";
+import { AdminPageOptionDto } from "./dto/admin-page-option.dto";
+import { UpdateAdminDto } from "./dto/update-admin.dto";
+import { Roles } from "../auth/decorators/roles.decorator";
+import { UserRoles } from "../user/types/user.type";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
+import { RolesGuard } from "../auth/guards/roles.guard";
 
-@Controller('admin')
+@GenericController("admin")
 export class AdminController {
-  constructor(private readonly adminService: AdminService) {}
+	constructor(private readonly adminService: AdminService) {}
 
-  @Post()
-  create(@Body() createAdminDto: CreateAdminDto) {
-    return this.adminService.create(createAdminDto);
-  }
+	@Get()
+	@Roles(UserRoles.ADMIN)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	findAll(@Query() dto: AdminPageOptionDto) {
+		return this.adminService.findAll(dto);
+	}
 
-  @Get()
-  findAll() {
-    return this.adminService.findAll();
-  }
+	@Get(":adminId")
+	async getSingleAdmin(@Param("adminId") adminId: number) {
+		const admin = await this.adminService.getSingleAdmin(+adminId);
+		return admin;
+	}
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminService.findOne(+id);
-  }
+	@Put(":adminId")
+	async updateAdmin(
+		@Param("adminId") adminId: number,
+		@Query() dto: UpdateAdminDto,
+	) {
+		await this.adminService.updateAdmin(+adminId, dto);
+	}
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
-    return this.adminService.update(+id, updateAdminDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminService.remove(+id);
-  }
+	@Delete(":adminId")
+	async deleteAdmin(@Param("adminId") adminId: number) {
+		await this.adminService.deleteAdmin(+adminId);
+	}
 }

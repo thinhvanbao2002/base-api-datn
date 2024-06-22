@@ -1,42 +1,58 @@
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, Reflector } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { HttpStatus, ValidationPipe, VersioningType } from "@nestjs/common";
+import { HttpResponseInterceptor } from "./common/interceptors/handleresponse.interceptor";
+import { HttpExceptionFilter } from "./common/exceptions/handleException";
+import {
+	ExpressAdapter,
+	NestExpressApplication,
+} from "@nestjs/platform-express";
 import { setupSwagger } from "./bootstrap/setup-swagger";
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
-	app.enableCors();
-	const config = new DocumentBuilder()
-		.setTitle("###")
-		.setDescription(
-			`### REST
-
-				Routes is following REST standard (Richardson level 3)
-
-				<details><summary>Detailed specification</summary>
-				<p>
-
-				</p>
-			</details>`,
-		)
-		.addBearerAuth(
-			{
-				type: "http",
-				name: "userAuth",
-				description: "Token for user access",
-				bearerFormat: "JWT",
-				scheme: "bearer",
-				in: "header",
+	const app = await NestFactory.create<NestExpressApplication>(
+		AppModule,
+		new ExpressAdapter(),
+		{
+			cors: true,
+		},
+	);
+	app.enableVersioning();
+	const reflector = app.get(Reflector);
+	app.useGlobalFilters(
+		// new BadRequestFilter(reflector),
+		// new QueryFailedFilter(reflector),
+		new HttpExceptionFilter(reflector),
+	);
+	app.useGlobalPipes(
+		new ValidationPipe({
+			//whitelist: true,
+			errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+			transform: true,
+			dismissDefaultMessages: false,
+			enableDebugMessages: true,
+			// transform: true,
+			// validateCustomDecorators: true,
+			// forbidNonWhitelisted: false,
+			// forbidUnknownValues: false,
+			// whitelist: true,
+			transformOptions: {
+				enableImplicitConversion: true,
 			},
-			"userAuth",
-		)
-		.setDescription("The cats API description")
-		.setVersion("1.0")
-		.addTag("")
-		.build();
-	const document = SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup("api", app, document);
-	setupSwagger(app);
+		}),
+	);
+	app.useGlobalInterceptors(new HttpResponseInterceptor());
+	app.enableVersioning({
+		type: VersioningType.URI,
+		defaultVersion: ["1"],
+		prefix: "api/v",
+	});
+
+	setupSwagger(app); // Call setupSwagger with the app instance
+
 	await app.listen(3009);
+
+	return app;
 }
+
 bootstrap();

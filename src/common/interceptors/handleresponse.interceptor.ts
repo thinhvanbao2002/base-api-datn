@@ -1,40 +1,32 @@
-import {
-	Injectable,
-	NestInterceptor,
-	ExecutionContext,
+import type {
 	CallHandler,
-	HttpStatus,
+	ExecutionContext,
+	NestInterceptor,
 } from "@nestjs/common";
-import { Observable } from "rxjs";
+import { Injectable } from "@nestjs/common";
+import { PageDto } from "../dto/page.dto";
+import { PagedResponseDto, ResponseDto } from "../dto/response.dto";
+import type { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { PagingResponse } from "../types/paging-response";
-
 @Injectable()
-export class HandleResponseInterceptor implements NestInterceptor {
-	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+export class HttpResponseInterceptor<T> implements NestInterceptor<T> {
+	/**
+	 * Intercept the request and add the timestamp
+	 * @param context {ExecutionContext}
+	 * @param next {CallHandler}
+	 * @returns { payload:Response<T>, timestamp: string }
+	 */
+	intercept(
+		context: ExecutionContext,
+		next: CallHandler,
+	): Observable<ResponseDto<T>> {
 		return next.handle().pipe(
 			map(data => {
-				if (data instanceof PagingResponse) {
-					const paging = {
-						page: data.page,
-						total_item: data.count,
-						limit: data.limit,
-					};
-					return {
-						code: 1,
-						status: HttpStatus.OK,
-						message: "Thành công!",
-						data: data.data,
-						paging: paging,
-					};
-				} else {
-					return {
-						code: 1,
-						status: HttpStatus.OK,
-						message: "Thành công!",
-						data: data,
-					};
+				if (data instanceof PageDto) {
+					return new PagedResponseDto(data, 200);
 				}
+
+				return new ResponseDto(data, 200);
 			}),
 		);
 	}

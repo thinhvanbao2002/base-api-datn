@@ -3,6 +3,7 @@ import { applyDecorators } from "@nestjs/common";
 import type { ApiPropertyOptions } from "@nestjs/swagger";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+
 import {
 	ArrayMaxSize,
 	ArrayMinSize,
@@ -31,7 +32,7 @@ import {
 } from "class-validator";
 import { DATE_FORMAT_STRING } from "../../common/helpers/date.helper";
 import { supportedLanguageCount } from "../../common/types/language-code";
-import _ from "lodash";
+import * as _ from "lodash";
 import moment from "moment";
 
 import { ApiEnumProperty, ApiUUIDProperty } from "./property.decorators";

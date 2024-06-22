@@ -1,26 +1,54 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import {
+	Injectable,
+	NotFoundException,
+	UnauthorizedException,
+} from "@nestjs/common";
+import { UserModel } from "../user/model/user.model";
+import { InjectModel } from "@nestjs/sequelize";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+	constructor(
+		@InjectModel(UserModel) private readonly userRepository: typeof UserModel,
+		private jwtService: JwtService,
+	) {}
+	async validateAdmin(email: string, password: string) {
+		const foundAmdin = await this.userRepository.findOne({
+			where: { email: email },
+		});
+		if (!foundAmdin) {
+			throw new NotFoundException("Tài khoản không tồn tại");
+		}
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+		const checkPass = bcrypt.compareSync(password, foundAmdin.password);
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+		console.log(checkPass);
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+		if (checkPass === false) {
+			throw new UnauthorizedException("Sai taì khoản hoặc mật khẩu!");
+		}
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
+		const payload = {
+			id: foundAmdin.id,
+			name: foundAmdin.name,
+			role: foundAmdin.role,
+		};
+
+		console.log(payload);
+
+		const token = await this.jwtService.signAsync(payload);
+
+		await this.userRepository.update(
+			{
+				token: token,
+			},
+			{ where: { id: foundAmdin.id } },
+		);
+
+		foundAmdin.token = token;
+
+		return foundAmdin;
+	}
 }

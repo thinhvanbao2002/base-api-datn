@@ -3,7 +3,7 @@ export const ROLES_METADATA = "roles";
 export const PERMISSIONS_METADATA = "permissions";
 export const FEATURE_METADATA = "feature";
 
-export const API_USER_BEARER_AUTH = "userToken";
+export const API_USER_BEARER_AUTH = "token";
 
 export const ENTITY_ACTIVE = 1;
 

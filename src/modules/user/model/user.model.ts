@@ -6,8 +6,11 @@ import {
 	CreatedAt,
 	UpdatedAt,
 	DeletedAt,
+	HasOne,
 } from "sequelize-typescript";
 import { UserRoles, UserStatus } from "../types/user.type";
+import { AdminModel } from "src/modules/admin/model/admin.model";
+import { getFullUrl } from "src/common/helpers/ultils";
 
 @Table({
 	tableName: "user",
@@ -33,6 +36,12 @@ export class UserModel extends Model {
 	phone: string;
 
 	@Column({
+		type: DataType.STRING(),
+		allowNull: false,
+	})
+	email: string;
+
+	@Column({
 		type: DataType.STRING,
 		allowNull: false,
 	})
@@ -41,6 +50,9 @@ export class UserModel extends Model {
 	@Column({
 		type: DataType.STRING,
 		allowNull: true,
+		get(): string {
+			return getFullUrl(this.getDataValue("avatar"));
+		},
 	})
 	avatar: string;
 
@@ -95,4 +107,7 @@ export class UserModel extends Model {
 
 	@DeletedAt
 	deleted_at: Date;
+
+	@HasOne(() => AdminModel)
+	admin: AdminModel;
 }

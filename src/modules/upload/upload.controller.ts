@@ -1,23 +1,15 @@
-import {
-	Controller,
-	Post,
-	UploadedFile,
-	UseFilters,
-	UseInterceptors,
-} from "@nestjs/common";
+import { Post, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
-import { HttpExceptionFilter } from "../../common/exceptions/handleException";
-import { HandleResponseInterceptor } from "../../common/interceptors/handleresponse.interceptor";
+
 import { v4 as uuidv4 } from "uuid";
 import {
 	imageFileFilter,
 	videoFileFilter,
 } from "../../common/filters/file.filter";
+import { GenericController } from "src/common/decorators/controller.decoretor";
 
-@Controller("uploads")
-@UseInterceptors(HandleResponseInterceptor)
-@UseFilters(HttpExceptionFilter)
+@GenericController("uploads")
 export class UploadController {
 	@Post("image")
 	@UseInterceptors(

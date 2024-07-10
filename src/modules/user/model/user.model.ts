@@ -1,16 +1,8 @@
-import {
-	Column,
-	DataType,
-	Table,
-	Model,
-	CreatedAt,
-	UpdatedAt,
-	DeletedAt,
-	HasOne,
-} from "sequelize-typescript";
+import { Column, DataType, Table, Model, CreatedAt, UpdatedAt, DeletedAt, HasOne } from "sequelize-typescript";
 import { UserRoles, UserStatus } from "../types/user.type";
 import { AdminModel } from "src/modules/admin/model/admin.model";
 import { getFullUrl } from "src/common/helpers/ultils";
+import { CustomerModel } from "src/modules/customer/model/customer.model";
 
 @Table({
 	tableName: "user",
@@ -110,4 +102,7 @@ export class UserModel extends Model {
 
 	@HasOne(() => AdminModel)
 	admin: AdminModel;
+
+	@HasOne(() => CustomerModel)
+	customer: CustomerModel;
 }

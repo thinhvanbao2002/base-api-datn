@@ -10,7 +10,7 @@ import {
 import { NotificationService } from "./notification.service";
 import { CreateNotificationDto } from "./dto/create-notification.dto";
 import { UpdateNotificationDto } from "./dto/update-notification.dto";
-import { GenericController } from "src/common/decorators/controller.decoretor";
+import { GenericController } from "src/common/decorators/controller.decorator";
 
 @GenericController("notification")
 export class NotificationController {

@@ -10,7 +10,7 @@ import {
 import { NewService } from "./new.service";
 import { CreateNewDto } from "./dto/create-new.dto";
 import { UpdateNewDto } from "./dto/update-new.dto";
-import { GenericController } from "src/common/decorators/controller.decoretor";
+import { GenericController } from "src/common/decorators/controller.decorator";
 
 @GenericController("new")
 export class NewController {

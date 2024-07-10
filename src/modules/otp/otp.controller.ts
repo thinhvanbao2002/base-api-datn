@@ -10,7 +10,7 @@ import {
 import { OtpService } from "./otp.service";
 import { CreateOtpDto } from "./dto/create-otp.dto";
 import { UpdateOtpDto } from "./dto/update-otp.dto";
-import { GenericController } from "src/common/decorators/controller.decoretor";
+import { GenericController } from "src/common/decorators/controller.decorator";
 
 @GenericController("otp")
 export class OtpController {

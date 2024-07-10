@@ -1,8 +1,4 @@
-import {
-	EnumFieldOptional,
-	NumberFieldOptional,
-	StringFieldOptional,
-} from "../decorators/field.decorator";
+import { EnumFieldOptional, NumberFieldOptional, StringFieldOptional } from "../decorators/field.decorator";
 
 export enum Order {
 	ASC,

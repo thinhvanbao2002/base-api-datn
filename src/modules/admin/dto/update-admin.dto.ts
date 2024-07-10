@@ -6,6 +6,9 @@ import { UserStatus } from "src/modules/user/types/user.type";
 
 export class UpdateAdminDto {
 	@StringFieldOptional()
+	name?: string;
+
+	@StringFieldOptional()
 	avatar?: string;
 
 	@EnumFieldOptional(() => UserStatus)

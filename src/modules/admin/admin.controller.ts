@@ -1,6 +1,6 @@
-import { Delete, Get, Param, Put, Query, UseGuards } from "@nestjs/common";
+import { Body, Delete, Get, Param, Put, Query, UseGuards } from "@nestjs/common";
 import { AdminService } from "./admin.service";
-import { GenericController } from "src/common/decorators/controller.decoretor";
+import { GenericController } from "src/common/decorators/controller.decorator";
 import { AdminPageOptionDto } from "./dto/admin-page-option.dto";
 import { UpdateAdminDto } from "./dto/update-admin.dto";
 import { Roles } from "../auth/decorators/roles.decorator";
@@ -26,10 +26,7 @@ export class AdminController {
 	}
 
 	@Put(":adminId")
-	async updateAdmin(
-		@Param("adminId") adminId: number,
-		@Query() dto: UpdateAdminDto,
-	) {
+	async updateAdmin(@Param("adminId") adminId: number, @Body() dto: UpdateAdminDto) {
 		await this.adminService.updateAdmin(+adminId, dto);
 	}
 

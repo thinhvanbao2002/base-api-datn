@@ -10,7 +10,7 @@ import {
 import { CustomerWalletService } from "./customer-wallet.service";
 import { CreateCustomerWalletDto } from "./dto/create-customer-wallet.dto";
 import { UpdateCustomerWalletDto } from "./dto/update-customer-wallet.dto";
-import { GenericController } from "src/common/decorators/controller.decoretor";
+import { GenericController } from "src/common/decorators/controller.decorator";
 
 @GenericController("customer-wallet")
 export class CustomerWalletController {

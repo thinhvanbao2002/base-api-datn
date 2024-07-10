@@ -1,7 +1,7 @@
 import { Post, Body } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthPayloadDto } from "./dto/auth.dto";
-import { GenericController } from "src/common/decorators/controller.decoretor";
+import { GenericController } from "src/common/decorators/controller.decorator";
 
 @GenericController("auth")
 export class AuthController {

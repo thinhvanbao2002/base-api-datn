@@ -21,7 +21,8 @@ import { AuthModule } from "./modules/auth/auth.module";
 @Module({
 	imports: [
 		ServeStaticModule.forRoot({
-			rootPath: join(__dirname, "..", "public/uploads"),
+			rootPath: join(__dirname, "..", "./uploads"),
+			serveRoot: "/api/v1/uploads/",
 		}),
 		ConfigModule.forRoot(),
 		SequelizeModule.forRootAsync({

@@ -7,7 +7,6 @@ import { PageDto } from "src/common/dto/page.dto";
 import { PageMetaDto } from "src/common/dto/page-meta.dto";
 import { WhereOptions } from "sequelize";
 import { Op } from "sequelize";
-import moment from "moment";
 import { ADMIN_ERROR } from "./constants/admin.constant";
 import { UpdateAdminDto } from "./dto/update-admin.dto";
 
@@ -19,8 +18,10 @@ export class AdminService {
 		private readonly adminRepository: typeof AdminModel,
 	) {}
 
-	async findAll(dto: AdminPageOptionDto): Promise<any> {
+	async findAll(dto: AdminPageOptionDto) {
 		const { q, status, from_date, to_date } = dto;
+		const dateConditions = [];
+
 		const whereOptions: WhereOptions = {};
 		if (q) {
 			const searchKeyword = `%${q}%`;
@@ -35,14 +36,13 @@ export class AdminService {
 		if (status) {
 			whereOptions.status = { [Op.eq]: status };
 		}
-		const dateConditions = [];
 		if (from_date) {
 			dateConditions.push({
-				[Op.gte]: moment(from_date).startOf("date").toDate(),
+				[Op.gte]: from_date,
 			});
 		}
 		if (to_date) {
-			dateConditions.push({ [Op.lte]: moment(to_date).endOf("date").toDate() });
+			dateConditions.push({ [Op.lte]: to_date });
 		}
 		if (dateConditions.length > 0) {
 			whereOptions.created_at = { [Op.and]: dateConditions };
@@ -55,10 +55,7 @@ export class AdminService {
 			limit: dto.take,
 			offset: dto.skip,
 		});
-		return new PageDto(
-			managers.rows,
-			new PageMetaDto({ itemCount: managers.count, pageOptionsDto: dto }),
-		);
+		return new PageDto(managers.rows, new PageMetaDto({ itemCount: managers.count, pageOptionsDto: dto }));
 	}
 
 	async getSingleAdmin(adminId: number): Promise<UserModel> {

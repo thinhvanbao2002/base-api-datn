@@ -24,8 +24,6 @@ export class AuthService {
 
 		const checkPass = bcrypt.compareSync(password, foundAmdin.password);
 
-		console.log(checkPass);
-
 		if (checkPass === false) {
 			throw new UnauthorizedException("Sai taì khoản hoặc mật khẩu!");
 		}
@@ -35,8 +33,6 @@ export class AuthService {
 			name: foundAmdin.name,
 			role: foundAmdin.role,
 		};
-
-		console.log(payload);
 
 		const token = await this.jwtService.signAsync(payload);
 

@@ -7,7 +7,7 @@ import {
 	imageFileFilter,
 	videoFileFilter,
 } from "../../common/filters/file.filter";
-import { GenericController } from "src/common/decorators/controller.decoretor";
+import { GenericController } from "src/common/decorators/controller.decorator";
 
 @GenericController("uploads")
 export class UploadController {
@@ -26,8 +26,8 @@ export class UploadController {
 		}),
 	)
 	public uploadImage(@UploadedFile() image: Express.Multer.File) {
-		const relativeUrl = `solution-file${image.filename}`;
-		const absoluteUrl = `${process.env.BASE_URL}/${relativeUrl}`;
+		const relativeUrl = `uploads/image${image.filename}`;
+		const absoluteUrl = `${process.env.API_BASE_URL}/api/v1/${relativeUrl}`;
 
 		const data = {
 			absoluteUrl,

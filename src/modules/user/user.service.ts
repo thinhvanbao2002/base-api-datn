@@ -34,18 +34,16 @@ export class UserService {
 		const SALT = bcrypt.genSaltSync();
 
 		const passwordHash = await bcrypt.hash(password, SALT);
-		const dataUser = await this.userRepository.sequelize.transaction(
-			async transaction => {
-				const user = await this.userRepository.create(
-					{ ...createUserDto, password: passwordHash },
-					{ transaction },
-				);
+		const dataUser = await this.userRepository.sequelize.transaction(async transaction => {
+			const user = await this.userRepository.create(
+				{ ...createUserDto, password: passwordHash },
+				{ transaction },
+			);
 
-				await this.adminRepository.create({ id: user.id }, { transaction });
+			await this.adminRepository.create({ id: user.id }, { transaction });
 
-				return user;
-			},
-		);
+			return user;
+		});
 		return dataUser;
 	}
 

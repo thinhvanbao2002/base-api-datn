@@ -1,5 +1,6 @@
 import {
 	DateFieldOptional,
+	EmailField,
 	EmailFieldOptional,
 	StringField,
 	StringFieldOptional,
@@ -9,10 +10,10 @@ export class CreateCustomerDto {
 	@StringField()
 	name: string;
 
-	@StringFieldOptional()
+	@StringField()
 	phone?: string;
 
-	@EmailFieldOptional()
+	@EmailField()
 	email?: string;
 
 	@StringFieldOptional()

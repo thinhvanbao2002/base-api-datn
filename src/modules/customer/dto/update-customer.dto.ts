@@ -1,10 +1,4 @@
-import {
-	DateFieldOptional,
-	EmailFieldOptional,
-	EnumFieldOptional,
-	StringField,
-	StringFieldOptional,
-} from "src/common/decorators/field.decorator";
+import { EnumFieldOptional, StringField, StringFieldOptional } from "src/common/decorators/field.decorator";
 import { UserStatus } from "src/modules/user/types/user.type";
 
 export class UpdateCustomerDto {
@@ -12,19 +6,7 @@ export class UpdateCustomerDto {
 	name: string;
 
 	@StringFieldOptional()
-	phone?: string;
-
-	@EmailFieldOptional()
-	email?: string;
-
-	@StringFieldOptional()
 	avatar?: string;
-
-	@DateFieldOptional()
-	birth_day?: Date;
-
-	@StringFieldOptional()
-	address?: string;
 
 	@EnumFieldOptional(() => UserStatus)
 	status?: UserStatus;

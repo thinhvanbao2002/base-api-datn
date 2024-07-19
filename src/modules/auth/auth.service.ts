@@ -1,8 +1,4 @@
-import {
-	Injectable,
-	NotFoundException,
-	UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { UserModel } from "../user/model/user.model";
 import { InjectModel } from "@nestjs/sequelize";
 import { JwtService } from "@nestjs/jwt";

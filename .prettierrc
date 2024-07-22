@@ -9,7 +9,9 @@
   "bracketSpacing": true,
   "bracketSameLine": false,
   "arrowParens": "avoid",
-  "importOrder": ["^[./]"],
+  "importOrder": [
+    "^[./]"
+  ],
   "importOrderSortSpecifiers": true,
   "importOrderSeparation": true
 }

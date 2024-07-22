@@ -1,12 +1,4 @@
-import {
-	Controller,
-	Get,
-	Post,
-	Body,
-	Patch,
-	Param,
-	Delete,
-} from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
 import { CustomerWalletService } from "./customer-wallet.service";
 import { CreateCustomerWalletDto } from "./dto/create-customer-wallet.dto";
 import { UpdateCustomerWalletDto } from "./dto/update-customer-wallet.dto";
@@ -32,10 +24,7 @@ export class CustomerWalletController {
 	}
 
 	@Patch(":id")
-	update(
-		@Param("id") id: string,
-		@Body() updateCustomerWalletDto: UpdateCustomerWalletDto,
-	) {
+	update(@Param("id") id: string, @Body() updateCustomerWalletDto: UpdateCustomerWalletDto) {
 		return this.customerWalletService.update(+id, updateCustomerWalletDto);
 	}
 

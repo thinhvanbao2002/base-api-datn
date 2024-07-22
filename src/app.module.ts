@@ -17,6 +17,7 @@ import { CustomerWalletHistoryModule } from "./modules/customer-wallet-history/c
 import { NewModule } from "./modules/new/new.module";
 import { VoucherCustomerModule } from "./modules/voucher-customer/voucher-customer.module";
 import { AuthModule } from "./modules/auth/auth.module";
+import { CategoryModule } from "./modules/category/category.module";
 
 @Module({
 	imports: [
@@ -55,6 +56,7 @@ import { AuthModule } from "./modules/auth/auth.module";
 		NewModule,
 		VoucherCustomerModule,
 		AuthModule,
+		CategoryModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

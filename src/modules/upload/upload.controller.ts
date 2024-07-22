@@ -3,10 +3,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 
 import { v4 as uuidv4 } from "uuid";
-import {
-	imageFileFilter,
-	videoFileFilter,
-} from "../../common/filters/file.filter";
+import { imageFileFilter, videoFileFilter } from "../../common/filters/file.filter";
 import { GenericController } from "src/common/decorators/controller.decorator";
 
 @GenericController("uploads")

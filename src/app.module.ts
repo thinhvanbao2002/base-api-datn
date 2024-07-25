@@ -15,9 +15,9 @@ import { CustomerInfoModule } from "./modules/customer-info/customer-info.module
 import { CustomerWalletModule } from "./modules/customer-wallet/customer-wallet.module";
 import { CustomerWalletHistoryModule } from "./modules/customer-wallet-history/customer-wallet-history.module";
 import { NewModule } from "./modules/new/new.module";
-import { VoucherCustomerModule } from "./modules/voucher-customer/voucher-customer.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { CategoryModule } from "./modules/category/category.module";
+import { VoucherModule } from "./modules/voucher/voucher.module";
 
 @Module({
 	imports: [
@@ -54,9 +54,9 @@ import { CategoryModule } from "./modules/category/category.module";
 		CustomerWalletModule,
 		CustomerWalletHistoryModule,
 		NewModule,
-		VoucherCustomerModule,
 		AuthModule,
 		CategoryModule,
+		VoucherModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

@@ -42,7 +42,6 @@ export class CategoryService {
 		const { q, status, from_date, to_date, take, skip } = dto;
 		const whereOptions: WhereOptions = {};
 		const dateConditions = [];
-		console.log(q);
 
 		whereOptions.parent_id = { [Op.is]: null };
 

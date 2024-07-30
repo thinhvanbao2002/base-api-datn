@@ -23,6 +23,9 @@ export class VoucherModel extends Model {
 	})
 	id: string;
 
+	@Column({ type: DataType.STRING, allowNull: true })
+	name: string;
+
 	@Column({ type: DataType.INTEGER, allowNull: true })
 	@ForeignKey(() => VoucherModel)
 	parent_id: number;
@@ -32,9 +35,6 @@ export class VoucherModel extends Model {
 
 	@HasMany(() => VoucherModel, { foreignKey: "parent_id" })
 	children: VoucherModel[];
-
-	@Column({ type: DataType.DATE, allowNull: true })
-	start_time: Date;
 
 	@Column({ type: DataType.DATE, allowNull: true })
 	end_time: Date;
@@ -48,6 +48,12 @@ export class VoucherModel extends Model {
 
 	@BelongsTo(() => CustomerModel)
 	customer: CustomerModel;
+
+	@Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: true })
+	status: number;
+
+	@Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
+	is_used: boolean;
 
 	@CreatedAt
 	created_at: Date;

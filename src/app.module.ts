@@ -18,6 +18,8 @@ import { NewModule } from "./modules/new/new.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { CategoryModule } from "./modules/category/category.module";
 import { VoucherModule } from "./modules/voucher/voucher.module";
+import { ProductModule } from './modules/product/product.module';
+import { ProductPhotoModule } from './modules/product-photo/product-photo.module';
 
 @Module({
 	imports: [
@@ -57,6 +59,8 @@ import { VoucherModule } from "./modules/voucher/voucher.module";
 		AuthModule,
 		CategoryModule,
 		VoucherModule,
+		ProductModule,
+		ProductPhotoModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

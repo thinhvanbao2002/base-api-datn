@@ -5,14 +5,8 @@ export class CreateVoucherDto {
 	name: string;
 
 	@DateField()
-	start_time: Date;
-
-	@DateField()
 	end_time: Date;
 
 	@NumberField()
 	discount_percent: number;
-
-	@NumberFieldOptional()
-	customer_id?: number;
 }

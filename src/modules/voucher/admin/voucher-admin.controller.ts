@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from "@nestjs/common";
 import { VoucherAdminService } from "./voucher-admin.service";
 import { CreateVoucherDto } from "../dto/create-voucher.dto";
 import { UpdateVoucherDto } from "../dto/update-voucher.dto";
 import { GenericController } from "src/common/decorators/controller.decorator";
+import { FilterVoucherDto } from "../dto/filter-voucher.dto";
+import { where, WhereOptions } from "sequelize";
+import { Op } from "sequelize";
 
 @GenericController("a/voucher")
 export class VoucherAdminController {
@@ -14,22 +17,24 @@ export class VoucherAdminController {
 	}
 
 	@Get()
-	async findAll() {
-		return this.voucherService.findAll();
+	async findAll(@Query() dto: FilterVoucherDto) {
+		const vouchers = await this.voucherService.findAll(dto);
+		return vouchers;
 	}
 
-	@Get(":id")
-	async findOne(@Param("id") id: string) {
-		return this.voucherService.findOne(+id);
+	@Get(":voucherId")
+	async findOne(@Param("voucherId") voucherId: number) {
+		const voucher = await this.voucherService.findOne(+voucherId);
+		return voucher;
 	}
 
-	@Patch(":id")
-	async update(@Param("id") id: string, @Body() updateVoucherDto: UpdateVoucherDto) {
-		return this.voucherService.update(+id, updateVoucherDto);
+	@Put(":voucherId")
+	async update(@Param("voucherId") voucherId: string, @Body() updateVoucherDto: UpdateVoucherDto) {
+		return this.voucherService.update(+voucherId, updateVoucherDto);
 	}
 
 	@Delete(":voucherId")
-	async remove(@Param("id") id: string) {
-		return this.voucherService.remove(+id);
+	async remove(@Param("voucherId") voucherId: number) {
+		return await this.voucherService.remove(+voucherId);
 	}
 }

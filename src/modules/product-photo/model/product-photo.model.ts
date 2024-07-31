@@ -23,7 +23,7 @@ export class ProductPhotoModel extends Model {
 	id: string;
 
 	@Column({
-		type: DataType.NUMBER,
+		type: DataType.INTEGER,
 		allowNull: false,
 	})
 	@ForeignKey(() => ProductModel)

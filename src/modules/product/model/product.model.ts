@@ -27,14 +27,14 @@ export class ProductModel extends Model {
 		type: DataType.STRING,
 		allowNull: false,
 	})
-	name: string;
+	name: string; // Tên sản phẩm bắt buộc
 
 	@Column({
-		type: DataType.STRING,
+		type: DataType.INTEGER,
 		allowNull: false,
 	})
 	@ForeignKey(() => CategoryModel)
-	category_id: string;
+	category_id: number; // Mã danh mục bắt buộc
 
 	@BelongsTo(() => CategoryModel)
 	category: CategoryModel;
@@ -43,67 +43,67 @@ export class ProductModel extends Model {
 		type: DataType.INTEGER,
 		allowNull: false,
 	})
-	price: number;
+	price: number; // giá tiền bắt buộc
 
 	@Column({
 		type: DataType.INTEGER,
 		allowNull: false,
 	})
-	warranty_period: number;
+	warranty_period: number; // thời gian bảo hành bắt buộc
 
 	@Column({
 		type: DataType.STRING,
 		allowNull: false,
 	})
-	feature: string;
+	feature: string; // tính năng bắt buộc
 
 	@Column({
 		type: DataType.INTEGER,
 		allowNull: false,
 	})
-	weight: number;
+	weight: number; // cân nặng bắt buộc
 
 	@Column({
 		type: DataType.ENUM(...Object.values(ProductTypes)),
 		allowNull: false,
 	})
-	product_type: ProductTypes;
+	product_type: ProductTypes; // Loại hàng bt buộc
 
 	@Column({
 		type: DataType.BOOLEAN,
 		defaultValue: true,
 	})
-	availability: boolean;
+	availability: boolean; // tình trạng (còn hàng, hết hàng)
 
 	@Column({
 		type: DataType.BOOLEAN,
 		defaultValue: true,
 	})
-	status: boolean;
+	status: boolean; // trạng thái
 
 	@Column({
 		type: DataType.INTEGER,
-		defaultValue: true,
+		defaultValue: 0,
 	})
-	number_of_review: number;
+	number_of_review: number; // Số lượng đánh giá
 
 	@Column({
 		type: DataType.FLOAT,
-		defaultValue: true,
+		defaultValue: 5,
 	})
-	rating_rate: number;
+	rating_rate: number; // tỉ lệ sao
 
 	@Column({
 		type: DataType.INTEGER,
-		defaultValue: true,
+		defaultValue: 0,
 	})
-	quantity: number;
+	quantity: number; // Số lượng còn bắt buộc
 
 	@Column({
 		type: DataType.INTEGER,
-		defaultValue: true,
+		defaultValue: 0,
 	})
-	sold: number;
+	sold: number; // Số lượng đã bán
 
 	@CreatedAt
 	created_at: Date;

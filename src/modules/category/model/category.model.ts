@@ -21,7 +21,7 @@ export class CategoryModel extends Model {
 		type: DataType.INTEGER,
 		primaryKey: true,
 	})
-	id: string;
+	id: number;
 
 	@Column({ type: DataType.INTEGER, allowNull: true })
 	@ForeignKey(() => CategoryModel)

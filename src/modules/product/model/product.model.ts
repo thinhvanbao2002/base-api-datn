@@ -5,12 +5,14 @@ import {
 	DataType,
 	DeletedAt,
 	ForeignKey,
+	HasMany,
 	Model,
 	Table,
 	UpdatedAt,
 } from "sequelize-typescript";
 import { ProductTypes } from "../types/product.type";
 import { CategoryModel } from "src/modules/category/model/category.model";
+import { ProductPhotoModel } from "src/modules/product-photo/model/product-photo.model";
 
 @Table({
 	tableName: "product",
@@ -104,6 +106,19 @@ export class ProductModel extends Model {
 		defaultValue: 0,
 	})
 	sold: number; // Số lượng đã bán
+
+	@Column({
+		type: DataType.TEXT,
+	})
+	description: string; // Số lượng đã bán
+
+	@Column({
+		type: DataType.STRING,
+	})
+	image: string; // Số lượng đã bán
+
+	@HasMany(() => ProductPhotoModel)
+	product_photo: ProductPhotoModel[];
 
 	@CreatedAt
 	created_at: Date;

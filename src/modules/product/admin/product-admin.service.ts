@@ -20,8 +20,19 @@ export class ProductAdminService {
 	) {}
 
 	async create(createProductDto: CreateProductDto) {
-		const { name, category_id, price, warranty_period, feature, weight, product_type, quantity, product_photo } =
-			createProductDto;
+		const {
+			name,
+			category_id,
+			price,
+			warranty_period,
+			feature,
+			weight,
+			product_type,
+			quantity,
+			product_photo,
+			description,
+			image,
+		} = createProductDto;
 
 		const foundCategory = await this.categoryRepository.findOne({
 			where: { id: category_id },
@@ -42,6 +53,8 @@ export class ProductAdminService {
 					weight,
 					product_type,
 					quantity,
+					description,
+					image,
 				},
 				{ transaction },
 			);
@@ -96,6 +109,7 @@ export class ProductAdminService {
 
 		const products = await this.productRepository.findAndCountAll({
 			where: whereOptions,
+			include: [{ model: CategoryModel }],
 			order: [["created_at", "DESC"]],
 			limit: dto.take,
 			offset: dto.skip,
@@ -104,15 +118,91 @@ export class ProductAdminService {
 		return new PageDto(products.rows, new PageMetaDto({ itemCount: products.count, pageOptionsDto: dto }));
 	}
 
-	findOne(id: number) {
-		return `This action returns a #${id} product`;
+	async findOne(productId: number) {
+		const product = await this.productRepository.findOne({
+			where: { id: productId },
+			include: [{ model: ProductPhotoModel }],
+		});
+
+		if (!product) {
+			throw new NotFoundException("Không tồn tại sản phẩm!");
+		}
+
+		return product;
 	}
 
-	update(id: number, updateProductDto: UpdateProductDto) {
-		return `This action updates a #${id} product`;
+	async update(productId: number, updateProductDto: UpdateProductDto) {
+		const {
+			name,
+			category_id,
+			price,
+			warranty_period,
+			feature,
+			weight,
+			product_type,
+			quantity,
+			product_photo,
+			status,
+			description,
+			image,
+		} = updateProductDto;
+
+		const foundProduct = await this.productRepository.findOne({
+			where: { id: productId },
+			include: [{ model: ProductPhotoModel }],
+		});
+
+		if (!foundProduct) {
+			throw new NotFoundException("Không tồn tại sản phẩm!");
+		}
+
+		await this.productRepository.sequelize.transaction(async transaction => {
+			await this.productRepository.update(
+				{
+					name,
+					category_id,
+					price,
+					warranty_period,
+					feature,
+					weight,
+					product_type,
+					quantity,
+					product_photo,
+					status,
+					description,
+					image,
+				},
+				{
+					where: { id: productId },
+					transaction,
+				},
+			);
+
+			const payloadProductPhoto = product_photo.map(item => {
+				return {
+					url: item,
+				};
+			});
+
+			await this.productPhotoModel.destroy({
+				where: { product_id: productId },
+				transaction,
+			});
+
+			await this.productPhotoModel.bulkCreate(payloadProductPhoto, { transaction });
+		});
 	}
 
-	remove(id: number) {
-		return `This action removes a #${id} product`;
+	async remove(productId: number) {
+		const foundProduct = await this.productRepository.findOne({
+			where: { id: productId },
+			include: [{ model: ProductPhotoModel }],
+		});
+
+		if (!foundProduct) {
+			throw new NotFoundException("Không tồn tại sản phẩm!");
+		}
+
+		await this.productRepository.destroy({ where: { id: productId } });
 	}
 }

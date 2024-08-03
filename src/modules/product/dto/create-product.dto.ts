@@ -4,6 +4,7 @@ import {
 	NumberField,
 	NumberFieldOptional,
 	StringField,
+	StringFieldOptional,
 } from "src/common/decorators/field.decorator";
 import { ProductTypes } from "../types/product.type";
 import { IsArray, IsOptional } from "class-validator";
@@ -39,4 +40,10 @@ export class CreateProductDto {
 	@IsOptional()
 	@ApiProperty()
 	product_photo: CreateProductPhotoDto[];
+
+	@StringFieldOptional()
+	description?: string;
+
+	@StringField()
+	image: string;
 }

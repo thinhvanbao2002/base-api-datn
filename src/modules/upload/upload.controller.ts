@@ -1,4 +1,4 @@
-import { Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Post, UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 
@@ -34,6 +34,37 @@ export class UploadController {
 		};
 
 		return data;
+	}
+
+	@Post("multipart-image")
+	@UseInterceptors(
+		FileInterceptor("images", {
+			fileFilter: imageFileFilter,
+			storage: diskStorage({
+				destination: "./uploads/image",
+				filename: (req, file, cb) => {
+					const fileExtension = file.originalname.split(".").pop();
+					const fileName = `/image_${uuidv4()}.${fileExtension}`;
+					cb(null, fileName);
+				},
+			}),
+		}),
+	)
+	public uploadMultipleImages(@UploadedFiles() images: Express.Multer.File[]) {
+		const uploadedImages = images.map(image => {
+			const relativeUrl = `uploads/image${image.filename}`;
+			const absoluteUrl = `${process.env.API_BASE_URL}/api/v1/${relativeUrl}`;
+
+			return {
+				absoluteUrl,
+				relativeUrl,
+				original_name: image.originalname,
+				generate_name: image.filename,
+				image,
+			};
+		});
+
+		return uploadedImages;
 	}
 
 	@Post("video")

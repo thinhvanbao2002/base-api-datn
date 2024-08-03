@@ -21,18 +21,18 @@ export class ProductAdminController {
 		return products;
 	}
 
-	@Get(":id")
-	findOne(@Param("id") id: string) {
-		return this.productAdminService.findOne(+id);
+	@Get(":productId")
+	async findOne(@Param("productId") productId: number) {
+		return await this.productAdminService.findOne(+productId);
 	}
 
 	@Patch(":id")
-	update(@Param("id") id: string, @Body() updateProductDto: UpdateProductDto) {
+	async update(@Param("id") id: string, @Body() updateProductDto: UpdateProductDto) {
 		return this.productAdminService.update(+id, updateProductDto);
 	}
 
-	@Delete(":id")
-	remove(@Param("id") id: string) {
-		return this.productAdminService.remove(+id);
+	@Delete(":productId")
+	async remove(@Param("productId") productId: number) {
+		return await this.productAdminService.remove(+productId);
 	}
 }

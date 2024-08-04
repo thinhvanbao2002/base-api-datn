@@ -3,7 +3,7 @@ import { PageOptionsDto } from "src/common/dto/page-option.dto";
 
 export class FilterCustomerDto extends PageOptionsDto {
 	@BooleanFieldOptional()
-	status: boolean;
+	status: string;
 
 	@DateFieldOptional()
 	from_date: Date;

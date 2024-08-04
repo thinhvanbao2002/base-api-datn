@@ -20,7 +20,7 @@ export class SearchProductDto extends PageOptionsDto {
 	product_type?: ProductTypes;
 
 	@BooleanFieldOptional()
-	status?: boolean;
+	status?: string;
 
 	@DateFieldOptional()
 	from_date?: Date;

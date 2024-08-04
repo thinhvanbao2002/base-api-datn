@@ -13,6 +13,7 @@ import {
 import { ProductTypes } from "../types/product.type";
 import { CategoryModel } from "src/modules/category/model/category.model";
 import { ProductPhotoModel } from "src/modules/product-photo/model/product-photo.model";
+import { getFullUrl } from "src/common/helpers/ultils";
 
 @Table({
 	tableName: "product",
@@ -114,6 +115,9 @@ export class ProductModel extends Model {
 
 	@Column({
 		type: DataType.STRING,
+		get(): string {
+			return getFullUrl(this.getDataValue("image"));
+		},
 	})
 	image: string; // Số lượng đã bán
 

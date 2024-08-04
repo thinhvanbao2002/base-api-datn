@@ -87,7 +87,7 @@ export class ProductAdminService {
 			whereOptions.product_type = { [Op.eq]: product_type };
 		}
 
-		if (status) {
+		if (status !== undefined) {
 			whereOptions.status = { [Op.eq]: status };
 		}
 
@@ -106,6 +106,8 @@ export class ProductAdminService {
 		if (dateConditions.length > 0) {
 			whereOptions.created_at = { [Op.and]: dateConditions };
 		}
+
+		console.log(whereOptions);
 
 		const products = await this.productRepository.findAndCountAll({
 			where: whereOptions,

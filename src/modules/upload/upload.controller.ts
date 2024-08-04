@@ -24,7 +24,7 @@ export class UploadController {
 	)
 	public uploadImage(@UploadedFile() image: Express.Multer.File) {
 		const relativeUrl = `uploads/image${image.filename}`;
-		const absoluteUrl = `${process.env.API_BASE_URL}/api/v1/${relativeUrl}`;
+		const absoluteUrl = `${process.env.API_BASE_URL}/${relativeUrl}`;
 
 		const data = {
 			absoluteUrl,

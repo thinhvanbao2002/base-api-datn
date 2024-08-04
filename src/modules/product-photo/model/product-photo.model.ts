@@ -9,6 +9,7 @@ import {
 	Table,
 	UpdatedAt,
 } from "sequelize-typescript";
+import { getFullUrl } from "src/common/helpers/ultils";
 import { ProductModel } from "src/modules/product/model/product.model";
 
 @Table({
@@ -35,6 +36,9 @@ export class ProductPhotoModel extends Model {
 	@Column({
 		type: DataType.STRING,
 		allowNull: false,
+		get(): string {
+			return getFullUrl(this.getDataValue("url"));
+		},
 	})
 	url: string;
 

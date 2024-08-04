@@ -17,6 +17,8 @@ export class ProductAdminController {
 
 	@Get()
 	async findAll(@Query() dto: SearchProductDto) {
+		console.log(dto);
+
 		const products = await this.productAdminService.findAll(dto);
 		return products;
 	}

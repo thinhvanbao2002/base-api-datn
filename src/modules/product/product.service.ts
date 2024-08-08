@@ -1,26 +1,90 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { CreateProductDto } from "./dto/create-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
+import { SearchProductDto } from "./dto/search-product.dto";
+import { WhereOptions } from "sequelize";
+import { Op } from "sequelize";
+import { InjectModel } from "@nestjs/sequelize";
+import { ProductModel } from "./model/product.model";
+import { ProductPhotoModel } from "../product-photo/model/product-photo.model";
+import { CategoryModel } from "../category/model/category.model";
+import { PageMetaDto } from "src/common/dto/page-meta.dto";
+import { PageDto } from "src/common/dto/page.dto";
 
 @Injectable()
 export class ProductService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
-  }
+	constructor(
+		@InjectModel(ProductModel) private readonly productRepository: typeof ProductModel,
+		@InjectModel(ProductPhotoModel) private productPhotoModel: typeof ProductModel,
+		@InjectModel(CategoryModel) private categoryRepository: typeof CategoryModel,
+	) {}
 
-  findAll() {
-    return `This action returns all product`;
-  }
+	create(createProductDto: CreateProductDto) {
+		return "This action adds a new product";
+	}
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
-  }
+	async findAll(dto: SearchProductDto) {
+		const { product_type, q, status, from_date, to_date, brand } = dto;
+		const whereOptions: WhereOptions = {};
+		const dateConditions = [];
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
-  }
+		if (q) {
+			whereOptions.name = { [Op.like]: `%${q}%` };
+		}
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
-  }
+		if (product_type) {
+			whereOptions.product_type = { [Op.eq]: product_type };
+		}
+
+		if (status !== undefined) {
+			whereOptions.status = { [Op.eq]: status };
+		}
+
+		if (brand) {
+			whereOptions.category_id = { [Op.eq]: brand };
+		}
+
+		if (from_date) {
+			dateConditions.push({
+				[Op.gte]: from_date,
+			});
+		}
+		if (to_date) {
+			dateConditions.push({ [Op.lte]: to_date });
+		}
+		if (dateConditions.length > 0) {
+			whereOptions.created_at = { [Op.and]: dateConditions };
+		}
+
+		const products = await this.productRepository.findAndCountAll({
+			where: whereOptions,
+			include: [{ model: CategoryModel }],
+			order: [["created_at", "DESC"]],
+			limit: dto.take,
+			offset: dto.skip,
+		});
+
+		return new PageDto(products.rows, new PageMetaDto({ itemCount: products.count, pageOptionsDto: dto }));
+	}
+
+	async findOne(id: number) {
+		const product = await this.productRepository.findOne({
+			where: { id: id },
+			include: [{ model: ProductPhotoModel }],
+		});
+
+		if (!product) {
+			throw new NotFoundException("Không tồn tại sản phẩm!");
+		}
+
+		return product;
+	}
+
+	update(id: number, updateProductDto: UpdateProductDto) {
+		return `This action updates a #${id} product`;
+	}
+
+	remove(id: number) {
+		return `This action removes a #${id} product`;
+	}
 }

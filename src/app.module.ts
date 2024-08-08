@@ -18,8 +18,8 @@ import { NewModule } from "./modules/new/new.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { CategoryModule } from "./modules/category/category.module";
 import { VoucherModule } from "./modules/voucher/voucher.module";
-import { ProductModule } from './modules/product/product.module';
-import { ProductPhotoModule } from './modules/product-photo/product-photo.module';
+import { ProductModule } from "./modules/product/product.module";
+import { ProductPhotoModule } from "./modules/product-photo/product-photo.module";
 
 @Module({
 	imports: [
@@ -39,10 +39,10 @@ import { ProductPhotoModule } from './modules/product-photo/product-photo.module
 				database: configService.get("DB_DATABASE"),
 				models: [join(process.cwd(), "dist/modules/*.model.js")],
 				autoLoadModels: true,
-				synchronize: true,
-				sync: {
-					alter: true,
-				},
+				// synchronize: true,
+				// sync: {
+				// 	alter: true,
+				// },
 			}),
 			inject: [ConfigService],
 		}),

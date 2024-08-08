@@ -10,16 +10,6 @@ import { SearchCategoryDto } from "./dto/search-category.dto";
 export class CategoryController {
 	constructor(private readonly categoryService: CategoryService) {}
 
-	@Post("child")
-	async createChildCategory(@Body() createChildCategoryDto: CreateChildCategoryDto) {
-		return await this.categoryService.createChildCategory(createChildCategoryDto);
-	}
-
-	@Post()
-	async create(@Body() createCategoryDto: CreateCategoryDto) {
-		return await this.categoryService.create(createCategoryDto);
-	}
-
 	@Get()
 	async findAll(@Query() dto: SearchCategoryDto) {
 		const categorys = this.categoryService.findAll(dto);

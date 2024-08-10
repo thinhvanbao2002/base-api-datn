@@ -1,34 +1,49 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { OrderService } from './order.service';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from "@nestjs/common";
+import { OrderService } from "./order.service";
+import { CreateOrderDto } from "./dto/create-order.dto";
+import { UpdateOrderDto } from "./dto/update-order.dto";
+import { GenericController } from "src/common/decorators/controller.decorator";
+import { Roles } from "../auth/decorators/roles.decorator";
+import { UserRoles } from "../user/types/user.type";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
+import { RolesGuard } from "../auth/guards/roles.guard";
+import { SearchOrderDto } from "./dto/search-order.dto";
+import { CancelOrderDto } from "./dto/cancel-order.dto";
 
-@Controller('order')
+@GenericController("order")
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+	constructor(private readonly orderService: OrderService) {}
 
-  @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
-  }
+	@Post()
+	@Roles(UserRoles.CUSTOMER)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	async create(@Body() createOrderDto: CreateOrderDto, @Request() req) {
+		return await this.orderService.create(createOrderDto, req);
+	}
 
-  @Get()
-  findAll() {
-    return this.orderService.findAll();
-  }
+	@Get()
+	@Roles(UserRoles.CUSTOMER)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	async findAll(dto: SearchOrderDto, @Request() req) {
+		return await this.orderService.findAll(dto, req);
+	}
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
-  }
+	@Get(":id")
+	@Roles(UserRoles.CUSTOMER)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	async findOne(@Param("id") id: number) {
+		return await this.orderService.findOne(+id);
+	}
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
-  }
+	@Patch(":id")
+	@Roles(UserRoles.CUSTOMER)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	async cancelOrder(@Param("id") id: number, @Body() dto: CancelOrderDto) {
+		return this.orderService.cancelOrder(+id, dto);
+	}
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
-  }
+	@Delete(":id")
+	remove(@Param("id") id: string) {
+		return this.orderService.remove(+id);
+	}
 }

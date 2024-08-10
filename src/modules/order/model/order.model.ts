@@ -35,18 +35,19 @@ export class OrderModel extends Model {
 	customer: CustomerModel;
 
 	@Column({
-		type: DataType.INTEGER,
-	})
-	@ForeignKey(() => ProductModel)
-	product_id: number;
-
-	@BelongsTo(() => ProductModel)
-	product: ProductModel;
-
-	@Column({
 		type: DataType.ENUM(...Object.values(OrderType)),
 	})
 	order_status: string;
+
+	@Column({
+		type: DataType.BIGINT,
+	})
+	total_price: number;
+
+	@Column({
+		type: DataType.STRING,
+	})
+	cancel_reason: string;
 
 	@CreatedAt
 	created_at: Date;

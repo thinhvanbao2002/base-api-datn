@@ -1,4 +1,6 @@
 import {
+	BeforeSave,
+	BeforeUpdate,
 	BelongsTo,
 	Column,
 	CreatedAt,
@@ -60,4 +62,15 @@ export class CartModel extends Model {
 
 	@DeletedAt
 	deleted_at: Date;
+
+	@BeforeSave
+	@BeforeUpdate
+	static async calculateTotalPrice(instance: CartModel) {
+		if (instance.product_id && instance.product_number) {
+			const product = await ProductModel.findByPk(instance.product_id);
+			if (product) {
+				instance.total_price = instance.product_number * product.price; // Assuming 'price' is the column in ProductModel
+			}
+		}
+	}
 }

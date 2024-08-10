@@ -11,13 +11,14 @@ import {
 	UpdatedAt,
 } from "sequelize-typescript";
 import { CustomerModel } from "src/modules/customer/model/customer.model";
+import { OrderModel } from "src/modules/order/model/order.model";
 import { ProductModel } from "src/modules/product/model/product.model";
 import { UserModel } from "src/modules/user/model/user.model";
 
 @Table({
 	tableName: "order_detail",
 })
-export class OrderModel extends Model {
+export class OrderDetailModel extends Model {
 	@Column({
 		type: DataType.INTEGER,
 		primaryKey: true,
@@ -47,6 +48,11 @@ export class OrderModel extends Model {
 		type: DataType.INTEGER,
 	})
 	quantity: number;
+
+	@Column({
+		type: DataType.BIGINT,
+	})
+	price: number;
 
 	@CreatedAt
 	created_at: Date;

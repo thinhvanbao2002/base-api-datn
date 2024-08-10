@@ -1,34 +1,49 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { CartService } from './cart.service';
-import { CreateCartDto } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Put } from "@nestjs/common";
+import { CartService } from "./cart.service";
+import { CreateCartDto } from "./dto/create-cart.dto";
+import { UpdateCartDto } from "./dto/update-cart.dto";
+import { GenericController } from "src/common/decorators/controller.decorator";
+import { Roles } from "../auth/decorators/roles.decorator";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
+import { RolesGuard } from "../auth/guards/roles.guard";
+import { UserRoles } from "../user/types/user.type";
 
-@Controller('cart')
+@GenericController("cart")
 export class CartController {
-  constructor(private readonly cartService: CartService) {}
+	constructor(private readonly cartService: CartService) {}
 
-  @Post()
-  create(@Body() createCartDto: CreateCartDto) {
-    return this.cartService.create(createCartDto);
-  }
+	@Post()
+	@Roles(UserRoles.CUSTOMER)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	async create(@Body() createCartDto: CreateCartDto, @Request() req) {
+		return await this.cartService.create(createCartDto, req);
+	}
 
-  @Get()
-  findAll() {
-    return this.cartService.findAll();
-  }
+	@Get()
+	@Roles(UserRoles.CUSTOMER)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	async findAll(@Request() req) {
+		return await this.cartService.findAll(req);
+	}
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cartService.findOne(+id);
-  }
+	@Get(":id")
+	@Roles(UserRoles.CUSTOMER)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	findOne(@Param("id") id: string) {
+		return this.cartService.findOne(+id);
+	}
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
-    return this.cartService.update(+id, updateCartDto);
-  }
+	@Put(":id")
+	@Roles(UserRoles.CUSTOMER)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	async update(@Param("id") id: string, @Body() updateCartDto: UpdateCartDto) {
+		return await this.cartService.update(+id, updateCartDto);
+	}
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cartService.remove(+id);
-  }
+	@Delete(":id")
+	@Roles(UserRoles.CUSTOMER)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	async remove(@Param("id") id: number) {
+		return await this.cartService.remove(+id);
+	}
 }

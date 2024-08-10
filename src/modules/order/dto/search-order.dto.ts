@@ -1,18 +1,14 @@
 import { IsNotEmpty, IsNumber, IsArray, ValidateNested, IsString, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { NumberField } from "src/common/decorators/field.decorator";
+import { DateFieldOptional, NumberField } from "src/common/decorators/field.decorator";
 import { ApiProperty } from "@nestjs/swagger";
 import { CreateOrderDetailDto } from "src/modules/order-detail/dto/create-order-detail.dto";
+import { PageOptionsDto } from "src/common/dto/page-option.dto";
 
-export class CreateOrderDto {
-	@NumberField()
-	customer_id: number;
+export class SearchOrderDto extends PageOptionsDto {
+	@DateFieldOptional()
+	from_date?: Date;
 
-	@NumberField()
-	total_price: number;
-
-	@IsArray()
-	@ApiProperty()
-	@IsOptional()
-	items: CreateOrderDetailDto[];
+	@DateFieldOptional()
+	to_date?: Date;
 }

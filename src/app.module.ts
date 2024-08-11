@@ -20,6 +20,9 @@ import { CategoryModule } from "./modules/category/category.module";
 import { VoucherModule } from "./modules/voucher/voucher.module";
 import { ProductModule } from "./modules/product/product.module";
 import { ProductPhotoModule } from "./modules/product-photo/product-photo.module";
+import { OrderModule } from "./modules/order/order.module";
+import { OrderDetailModule } from "./modules/order-detail/order-detail.module";
+import { CartModule } from "./modules/cart/cart.module";
 
 @Module({
 	imports: [
@@ -39,10 +42,10 @@ import { ProductPhotoModule } from "./modules/product-photo/product-photo.module
 				database: configService.get("DB_DATABASE"),
 				models: [join(process.cwd(), "dist/modules/*.model.js")],
 				autoLoadModels: true,
-				// synchronize: true,
-				// sync: {
-				// 	alter: true,
-				// },
+				synchronize: true,
+				sync: {
+					alter: true,
+				},
 			}),
 			inject: [ConfigService],
 		}),
@@ -61,6 +64,9 @@ import { ProductPhotoModule } from "./modules/product-photo/product-photo.module
 		VoucherModule,
 		ProductModule,
 		ProductPhotoModule,
+		OrderModule,
+		OrderDetailModule,
+		CartModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

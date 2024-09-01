@@ -80,6 +80,48 @@ export class CategoryService {
 		return new PageDto(categorys.rows, new PageMetaDto({ itemCount: categorys.count, pageOptionsDto: dto }));
 	}
 
+	async findAllChild(dto: SearchCategoryDto) {
+		const { q, status, from_date, to_date, take, skip } = dto;
+		const whereOptions: WhereOptions = {};
+		const dateConditions = [];
+
+		whereOptions.parent_id = { [Op.ne]: null };
+
+		if (q) {
+			whereOptions.name = { [Op.like]: `%${q}%` };
+		}
+
+		if (status) {
+			whereOptions.status = { [Op.eq]: status };
+		}
+
+		if (from_date) {
+			dateConditions.push({
+				[Op.gte]: from_date,
+			});
+		}
+		if (to_date) {
+			dateConditions.push({ [Op.lte]: to_date });
+		}
+		if (dateConditions.length > 0) {
+			whereOptions.created_at = { [Op.and]: dateConditions };
+		}
+
+		const categorys = await this.categoryRepository.findAndCountAll({
+			where: whereOptions,
+			include: [
+				{
+					model: CategoryModel,
+					as: "children",
+				},
+			],
+			limit: 100,
+			offset: skip,
+		});
+
+		return new PageDto(categorys.rows, new PageMetaDto({ itemCount: categorys.count, pageOptionsDto: dto }));
+	}
+
 	async findOne(categoryId: number) {
 		const foundCategory = await this.categoryRepository.findOne({
 			where: { id: categoryId },

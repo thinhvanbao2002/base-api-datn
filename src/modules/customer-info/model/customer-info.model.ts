@@ -36,6 +36,11 @@ export class CustomerInfoModel extends Model {
 	@Column({
 		type: DataType.STRING,
 	})
+	customer_name: string;
+
+	@Column({
+		type: DataType.STRING,
+	})
 	customer_phone: string;
 
 	@Column({

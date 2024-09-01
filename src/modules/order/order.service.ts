@@ -6,7 +6,7 @@ import { OrderModel } from "./model/order.model";
 import { OrderDetailModel } from "../order-detail/model/order-detail.model";
 import { OrderType } from "./types/order.type";
 import { SearchOrderDto } from "./dto/search-order.dto";
-import { WhereOptions } from "sequelize";
+import { or, WhereOptions } from "sequelize";
 import { Op } from "sequelize";
 import { PageDto } from "src/common/dto/page.dto";
 import { PageMetaDto } from "src/common/dto/page-meta.dto";
@@ -23,7 +23,7 @@ export class OrderService {
 	) {}
 
 	async create(createOrderDto: CreateOrderDto, req: any) {
-		const { total_price, items } = createOrderDto;
+		const { total_price, items, name, phone, address, note } = createOrderDto;
 		const customerId = req?.user?.id;
 
 		await this.orderRp.sequelize.transaction(async transaction => {
@@ -32,6 +32,10 @@ export class OrderService {
 					customer_id: customerId,
 					order_status: OrderType.PENDING,
 					total_price: total_price,
+					name,
+					phone,
+					address,
+					note,
 				},
 				{ transaction },
 			);
@@ -42,7 +46,7 @@ export class OrderService {
 						order_id: order.id,
 						product_id: i.product_id,
 						quantity: i.quantity,
-						price: i.price,
+						price: i.totalPrice,
 					};
 				});
 
@@ -52,13 +56,11 @@ export class OrderService {
 	}
 
 	async findAll(dto: SearchOrderDto, req: any) {
-		const { from_date, to_date } = dto;
+		const { from_date, to_date, type } = dto;
 		const customerId = req?.user?.id;
 		const dateConditions = [];
 		const whereOptions: WhereOptions = {};
-
 		whereOptions.customer_id = { [Op.eq]: customerId };
-
 		if (from_date) {
 			dateConditions.push({ [Op.gte]: from_date });
 		}
@@ -69,14 +71,17 @@ export class OrderService {
 			whereOptions.created_at = { [Op.and]: dateConditions };
 		}
 
-		const orders = await this.orderRp.findAndCountAll({
+		if (type) {
+			whereOptions.order_status = { [Op.eq]: type };
+		}
+		const orders = await this.orderRp.findAll({
 			where: whereOptions,
+			include: [{ model: OrderDetailModel, include: [{ model: ProductModel }] }],
 			order: [["created_at", "DESC"]],
-			limit: dto.take,
-			offset: dto.skip,
 		});
 
-		return new PageDto(orders.rows, new PageMetaDto({ itemCount: orders.count, pageOptionsDto: dto }));
+		return orders;
+		// return new PageDto(orders.rows, new PageMetaDto({ itemCount: orders.count, pageOptionsDto: dto }));
 	}
 
 	async findOne(id: number) {

@@ -161,18 +161,7 @@ export class ProductAdminService {
 		await this.productRepository.sequelize.transaction(async transaction => {
 			await this.productRepository.update(
 				{
-					name,
-					category_id,
-					price,
-					warranty_period,
-					feature,
-					weight,
-					product_type,
-					quantity,
-					product_photo,
-					status,
-					description,
-					image,
+					...updateProductDto,
 				},
 				{
 					where: { id: productId },
@@ -180,18 +169,20 @@ export class ProductAdminService {
 				},
 			);
 
-			const payloadProductPhoto = product_photo.map(item => {
-				return {
-					url: item,
-				};
-			});
+			if (product_photo && product_photo.length > 0) {
+				const payloadProductPhoto = product_photo.map(item => {
+					return {
+						url: item,
+						product_id: productId,
+					};
+				});
 
-			await this.productPhotoModel.destroy({
-				where: { product_id: productId },
-				transaction,
-			});
-
-			await this.productPhotoModel.bulkCreate(payloadProductPhoto, { transaction });
+				await this.productPhotoModel.destroy({
+					where: { product_id: productId },
+					transaction,
+				});
+				await this.productPhotoModel.bulkCreate(payloadProductPhoto, { transaction });
+			}
 		});
 	}
 

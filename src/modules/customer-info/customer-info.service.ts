@@ -10,7 +10,7 @@ export class CustomerInfoService {
 	constructor(@InjectModel(CustomerInfoModel) private readonly customerInfoRepository: typeof CustomerInfoModel) {}
 
 	async create(createCustomerInfoDto: CreateCustomerInfoDto, customerId: number) {
-		const { phone, address, is_default } = createCustomerInfoDto;
+		const { phone, address, is_default, name } = createCustomerInfoDto;
 
 		await this.customerInfoRepository.sequelize.transaction(async transaction => {
 			if (is_default === true) {
@@ -27,9 +27,10 @@ export class CustomerInfoService {
 
 			await this.customerInfoRepository.create(
 				{
+					customer_name: name,
 					customer_id: customerId,
-					phone: phone,
-					address: address,
+					customer_phone: phone,
+					customer_address: address,
 				},
 				{ transaction },
 			);
@@ -39,6 +40,7 @@ export class CustomerInfoService {
 	async findAll(customerId: number) {
 		const customerInfo = await this.customerInfoRepository.findAll({
 			where: { customer_id: customerId },
+			order: [["created_at", "DESC"]],
 		});
 		return customerInfo;
 	}
@@ -54,7 +56,7 @@ export class CustomerInfoService {
 	}
 
 	async update(id: number, updateCustomerInfoDto: UpdateCustomerInfoDto, customerId: number) {
-		const { phone, address, is_default } = updateCustomerInfoDto;
+		const { phone, address, is_default, name } = updateCustomerInfoDto;
 
 		const foundCustomerInfo = await this.customerInfoRepository.findOne({
 			where: { id: id },
@@ -77,9 +79,10 @@ export class CustomerInfoService {
 			}
 			await this.customerInfoRepository.update(
 				{
+					customer_name: name,
 					is_default: is_default,
-					phone: phone,
-					address: address,
+					customer_phone: phone,
+					customer_address: address,
 				},
 				{
 					where: { id: id },

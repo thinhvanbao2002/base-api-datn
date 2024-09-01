@@ -9,22 +9,22 @@ interface IPageMetaDtoParameters {
 
 export class PageMetaDto {
 	@ApiProperty()
-	readonly page: number;
+	page: number;
 
 	@ApiProperty()
-	readonly take: number;
+	take: number;
 
 	@ApiProperty()
-	readonly item_count: number;
+	item_count: number;
 
 	@ApiProperty()
-	readonly page_count: number;
+	page_count: number;
 
 	@ApiProperty()
-	readonly has_previous_page: boolean;
+	has_previous_page: boolean;
 
 	@ApiProperty()
-	readonly has_next_page: boolean;
+	has_next_page: boolean;
 
 	constructor({ pageOptionsDto, itemCount }: IPageMetaDtoParameters) {
 		this.page = pageOptionsDto.page;

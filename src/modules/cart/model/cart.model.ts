@@ -46,6 +46,7 @@ export class CartModel extends Model {
 
 	@Column({
 		type: DataType.INTEGER,
+		defaultValue: 1,
 	})
 	product_number: number;
 

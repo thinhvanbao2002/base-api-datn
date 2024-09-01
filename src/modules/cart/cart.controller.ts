@@ -36,7 +36,9 @@ export class CartController {
 	@Put(":id")
 	@Roles(UserRoles.CUSTOMER)
 	@UseGuards(JwtAuthGuard, RolesGuard)
-	async update(@Param("id") id: string, @Body() updateCartDto: UpdateCartDto) {
+	async update(@Param("id") id: number, @Body() updateCartDto: UpdateCartDto) {
+		console.log(updateCartDto);
+
 		return await this.cartService.update(+id, updateCartDto);
 	}
 

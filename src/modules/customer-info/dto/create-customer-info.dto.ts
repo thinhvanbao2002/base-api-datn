@@ -2,6 +2,9 @@ import { BooleanFieldOptional, StringFieldOptional } from "src/common/decorators
 
 export class CreateCustomerInfoDto {
 	@StringFieldOptional()
+	name?: string;
+
+	@StringFieldOptional()
 	phone?: string;
 
 	@StringFieldOptional()

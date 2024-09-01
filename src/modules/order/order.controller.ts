@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Query } from "@nestjs/common";
 import { OrderService } from "./order.service";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { UpdateOrderDto } from "./dto/update-order.dto";
@@ -24,8 +24,9 @@ export class OrderController {
 	@Get()
 	@Roles(UserRoles.CUSTOMER)
 	@UseGuards(JwtAuthGuard, RolesGuard)
-	async findAll(dto: SearchOrderDto, @Request() req) {
-		return await this.orderService.findAll(dto, req);
+	async findAll(@Query() dto: SearchOrderDto, @Request() req) {
+		const orders = await this.orderService.findAll(dto, req);
+		return orders;
 	}
 
 	@Get(":id")

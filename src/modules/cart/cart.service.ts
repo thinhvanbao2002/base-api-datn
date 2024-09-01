@@ -5,6 +5,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { CartModel } from "./model/cart.model";
 import { PageDto } from "src/common/dto/page.dto";
 import { PageMetaDto } from "src/common/dto/page-meta.dto";
+import { ProductModel } from "../product/model/product.model";
 
 @Injectable()
 export class CartService {
@@ -33,6 +34,8 @@ export class CartService {
 
 		const carts = await this.cartRepository.findAll({
 			where: { customer_id: customerId },
+			order: [["created_at", "DESC"]],
+			include: [{ model: ProductModel }],
 		});
 
 		return carts;
@@ -43,7 +46,7 @@ export class CartService {
 	}
 
 	async update(id: number, updateCartDto: UpdateCartDto) {
-		const { product_number, total_price } = updateCartDto;
+		const { product_number } = updateCartDto;
 
 		const foundCart = await this.cartRepository.findOne({
 			where: { id: id },
@@ -53,15 +56,11 @@ export class CartService {
 			throw new NotFoundException("Sản phẩm trong giỏ hàng không tồn tại!");
 		}
 
-		await this.cartRepository.update(
-			{
-				product_number,
-				total_price,
-			},
-			{
-				where: { id: id },
-			},
-		);
+		// Cập nhật số lượng sản phẩm
+		foundCart.product_number = product_number;
+
+		// Save sẽ gọi các hooks và tính toán lại total_price
+		await foundCart.save();
 	}
 
 	async remove(id: number) {

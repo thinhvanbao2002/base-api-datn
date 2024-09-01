@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from "@nestjs/common";
 
 import { GenericController } from "src/common/decorators/controller.decorator";
 import { ProductAdminService } from "./product-admin.service";
@@ -28,7 +28,7 @@ export class ProductAdminController {
 		return await this.productAdminService.findOne(+productId);
 	}
 
-	@Patch(":id")
+	@Put(":id")
 	async update(@Param("id") id: string, @Body() updateProductDto: UpdateProductDto) {
 		return this.productAdminService.update(+id, updateProductDto);
 	}

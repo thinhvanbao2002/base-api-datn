@@ -23,6 +23,10 @@ import { ProductPhotoModule } from "./modules/product-photo/product-photo.module
 import { OrderModule } from "./modules/order/order.module";
 import { OrderDetailModule } from "./modules/order-detail/order-detail.module";
 import { CartModule } from "./modules/cart/cart.module";
+import { OverviewModule } from "./modules/overview/overview.module";
+import { WebsocketModule } from "./modules/websocket/websocket.module";
+import { ProductReviewModule } from "./modules/product-review/product-review.module";
+import { TransactionModule } from './modules/transaction/transaction.module';
 
 @Module({
 	imports: [
@@ -67,6 +71,11 @@ import { CartModule } from "./modules/cart/cart.module";
 		OrderModule,
 		OrderDetailModule,
 		CartModule,
+		OverviewModule,
+		WebsocketModule,
+		ProductReviewModule,
+		ProductReviewModule,
+		TransactionModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

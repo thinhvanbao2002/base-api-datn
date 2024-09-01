@@ -10,6 +10,12 @@ import { SearchCategoryDto } from "./dto/search-category.dto";
 export class CategoryController {
 	constructor(private readonly categoryService: CategoryService) {}
 
+	@Get("child")
+	async findAllChild(@Query() dto: SearchCategoryDto) {
+		const categorys = this.categoryService.findAllChild(dto);
+		return categorys;
+	}
+
 	@Get()
 	async findAll(@Query() dto: SearchCategoryDto) {
 		const categorys = this.categoryService.findAll(dto);

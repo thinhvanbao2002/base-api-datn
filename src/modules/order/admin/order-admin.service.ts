@@ -24,10 +24,14 @@ export class OrderAdminService {
 	async findAll(dto: SearchOrderAdminDto) {
 		const { order_status, from_date, to_date } = dto;
 
+		console.log(dto);
+
 		const dateConditions = [];
 		const whereOptions: WhereOptions = {};
 
-		whereOptions.order_status = { [Op.eq]: order_status };
+		if (order_status) {
+			whereOptions.order_status = { [Op.eq]: order_status };
+		}
 
 		if (from_date) {
 			dateConditions.push({ [Op.gte]: from_date });
@@ -41,6 +45,10 @@ export class OrderAdminService {
 
 		const orders = await this.orderRp.findAndCountAll({
 			where: whereOptions,
+			include: [
+				{ model: OrderDetailModel, include: [{ model: ProductModel }] },
+				{ model: CustomerModel, include: [{ model: UserModel }] },
+			],
 			order: [["created_at", "DESC"]],
 			limit: dto.take,
 			offset: dto.skip,

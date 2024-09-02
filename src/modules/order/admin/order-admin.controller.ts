@@ -16,8 +16,8 @@ export class OrderAdminController {
 	}
 
 	@Get(":id")
-	findOne(@Param("id") id: string) {
-		// return this.orderDetailService.findOne(+id);
+	async findOne(@Param("id") id: string) {
+		return await this.orderAdminService.findOne(+id);
 	}
 
 	@Patch(":id")

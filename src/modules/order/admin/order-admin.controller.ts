@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from "@nestjs/common";
 import { GenericController } from "src/common/decorators/controller.decorator";
 import { UpdateOrderDetailDto } from "src/modules/order-detail/dto/update-order-detail.dto";
 import { SearchOrderDto } from "../dto/search-order.dto";

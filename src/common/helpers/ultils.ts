@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt";
+
 export function getFullUrl(path?: string): string {
 	if (!path) {
 		return null;
@@ -7,4 +9,12 @@ export function getFullUrl(path?: string): string {
 		return `${process.env.API_BASE_URL}/${path}`;
 	}
 	return path;
+}
+
+export function validateHash(password: string | undefined, hash: string | undefined): Promise<boolean> {
+	if (!password || !hash) {
+		return Promise.resolve(false);
+	}
+
+	return bcrypt.compare(password, hash);
 }

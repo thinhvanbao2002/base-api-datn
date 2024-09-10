@@ -1,9 +1,13 @@
-import { Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
+import { Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Put, Request } from "@nestjs/common";
 import { CustomerService } from "./customer.service";
 import { CreateCustomerDto } from "./dto/create-customer.dto";
 import { UpdateCustomerDto } from "./dto/update-customer.dto";
 import { GenericController } from "src/common/decorators/controller.decorator";
 import { FilterCustomerDto } from "./dto/filter-customers.dto";
+import { Roles } from "../auth/decorators/roles.decorator";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
+import { RolesGuard } from "../auth/guards/roles.guard";
+import { UserRoles } from "../user/types/user.type";
 
 @GenericController("customer")
 export class CustomerController {
@@ -20,9 +24,13 @@ export class CustomerController {
 		return customers;
 	}
 
-	@Patch(":id")
-	update(@Param("id") id: string, @Body() updateCustomerDto: UpdateCustomerDto) {
-		return this.customerService.update(+id, updateCustomerDto);
+	@Put()
+	@Roles(UserRoles.CUSTOMER)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	async update(@Body() updateCustomerDto: UpdateCustomerDto, @Request() req) {
+		console.log("-------------------------------------------------");
+
+		return await this.customerService.update(updateCustomerDto, req);
 	}
 
 	@Delete(":id")

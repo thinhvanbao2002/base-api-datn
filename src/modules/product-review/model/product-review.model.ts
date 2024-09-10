@@ -1,4 +1,14 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import {
+	BelongsTo,
+	Column,
+	CreatedAt,
+	DataType,
+	DeletedAt,
+	ForeignKey,
+	Model,
+	Table,
+	UpdatedAt,
+} from "sequelize-typescript";
 import { CustomerModel } from "src/modules/customer/model/customer.model";
 import { ProductModel } from "src/modules/product/model/product.model";
 
@@ -25,4 +35,13 @@ export class ProductReviewModel extends Model {
 
 	@Column({ type: DataType.TEXT })
 	review: string;
+
+	@CreatedAt
+	created_at: Date;
+
+	@UpdatedAt
+	updated_at: Date;
+
+	@DeletedAt
+	deleted_at: Date;
 }

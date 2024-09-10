@@ -68,6 +68,7 @@ export class CustomerService {
 
 			await this.customerInfoRepository.create(
 				{
+					customer_name: name,
 					customer_id: user.id,
 					customer_phone: phone,
 					customer_address: address,
@@ -122,8 +123,23 @@ export class CustomerService {
 		return `This action returns a #${id} customer`;
 	}
 
-	update(id: number, updateCustomerDto: UpdateCustomerDto) {
-		return `This action updates a #${id} customer`;
+	async update(updateCustomerDto: UpdateCustomerDto, req: any) {
+		const { name, avatar } = updateCustomerDto;
+		const customerId = req?.user?.id;
+
+		console.log("Customer Id: ", customerId);
+		console.log("Name", name);
+		console.log("Avatar", avatar);
+
+		await this.userRepository.update(
+			{
+				name,
+				avatar,
+			},
+			{
+				where: { id: customerId },
+			},
+		);
 	}
 
 	remove(id: number) {

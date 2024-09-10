@@ -26,6 +26,8 @@ export class OrderService {
 		const { total_price, items, name, phone, address, note } = createOrderDto;
 		const customerId = req?.user?.id;
 
+		console.log(name);
+
 		await this.orderRp.sequelize.transaction(async transaction => {
 			const order = await this.orderRp.create(
 				{

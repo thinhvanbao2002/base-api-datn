@@ -3,6 +3,8 @@ import { CreateProductReviewDto } from "./dto/create-product-review.dto";
 import { UpdateProductReviewDto } from "./dto/update-product-review.dto";
 import { InjectModel } from "@nestjs/sequelize";
 import { ProductReviewModel } from "./model/product-review.model";
+import { CustomerModel } from "../customer/model/customer.model";
+import { UserModel } from "../user/model/user.model";
 
 @Injectable()
 export class ProductReviewService {
@@ -23,6 +25,7 @@ export class ProductReviewService {
 	async findAll(productId: number) {
 		const reviews = await this.productReviewRepository.findAll({
 			where: { product_id: productId },
+			include: [{ model: CustomerModel, include: [{ model: UserModel }] }],
 			order: [["created_at", "DESC"]],
 		});
 		return reviews;

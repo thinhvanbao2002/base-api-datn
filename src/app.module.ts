@@ -26,7 +26,7 @@ import { CartModule } from "./modules/cart/cart.module";
 import { OverviewModule } from "./modules/overview/overview.module";
 import { WebsocketModule } from "./modules/websocket/websocket.module";
 import { ProductReviewModule } from "./modules/product-review/product-review.module";
-import { TransactionModule } from './modules/transaction/transaction.module';
+import { TransactionModule } from "./modules/transaction/transaction.module";
 
 @Module({
 	imports: [
@@ -46,10 +46,10 @@ import { TransactionModule } from './modules/transaction/transaction.module';
 				database: configService.get("DB_DATABASE"),
 				models: [join(process.cwd(), "dist/modules/*.model.js")],
 				autoLoadModels: true,
-				synchronize: true,
-				sync: {
-					alter: true,
-				},
+				// synchronize: true,
+				// sync: {
+				// 	alter: true,
+				// },
 			}),
 			inject: [ConfigService],
 		}),

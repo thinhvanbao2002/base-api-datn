@@ -1,43 +1,25 @@
-import {
-	Controller,
-	Get,
-	Post,
-	Body,
-	Patch,
-	Param,
-	Delete,
-} from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
 import { OtpService } from "./otp.service";
 import { CreateOtpDto } from "./dto/create-otp.dto";
 import { UpdateOtpDto } from "./dto/update-otp.dto";
 import { GenericController } from "src/common/decorators/controller.decorator";
+import { VerifyOtpDto } from "./dto/verifyotp.dto";
 
 @GenericController("otp")
 export class OtpController {
 	constructor(private readonly otpService: OtpService) {}
-
-	@Post()
-	create(@Body() createOtpDto: CreateOtpDto) {
-		return this.otpService.create(createOtpDto);
+	@Post("send")
+	async sendOtp(@Body() dto: CreateOtpDto) {
+		const otpCode = await this.otpService.generateOtp(dto);
+		return otpCode;
 	}
 
-	@Get()
-	findAll() {
-		return this.otpService.findAll();
-	}
+	@Post("verify")
+	async verifyOtp(@Body() dto: VerifyOtpDto) {
+		console.log(dto);
 
-	@Get(":id")
-	findOne(@Param("id") id: string) {
-		return this.otpService.findOne(+id);
-	}
+		const isValid = await this.otpService.verifyOtp(dto);
 
-	@Patch(":id")
-	update(@Param("id") id: string, @Body() updateOtpDto: UpdateOtpDto) {
-		return this.otpService.update(+id, updateOtpDto);
-	}
-
-	@Delete(":id")
-	remove(@Param("id") id: string) {
-		return this.otpService.remove(+id);
+		return isValid;
 	}
 }

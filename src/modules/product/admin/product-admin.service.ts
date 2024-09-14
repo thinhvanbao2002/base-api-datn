@@ -10,6 +10,7 @@ import { WhereOptions } from "sequelize";
 import { Op } from "sequelize";
 import { PageDto } from "src/common/dto/page.dto";
 import { PageMetaDto } from "src/common/dto/page-meta.dto";
+import { ImportProductDto } from "../dto/import-product.dto";
 
 @Injectable()
 export class ProductAdminService {
@@ -197,5 +198,19 @@ export class ProductAdminService {
 		}
 
 		await this.productRepository.destroy({ where: { id: productId } });
+	}
+
+	async import(productId: number, dto: ImportProductDto, req: any) {
+		const foundProduct = await this.productRepository.findOne({
+			where: { id: productId },
+		});
+
+		if (!foundProduct) {
+			throw new NotFoundException("Không tồn tại sản phẩm!");
+		}
+
+		foundProduct.quantity += dto.quantity;
+
+		foundProduct.save();
 	}
 }

@@ -13,8 +13,10 @@ export class AuthService {
 		private jwtService: JwtService,
 	) {}
 	async validateAdmin(email: string, password: string) {
+		console.log("email", email);
+
 		const foundAmdin = await this.userRepository.findOne({
-			where: { email: email },
+			where: { phone: email },
 		});
 		if (!foundAmdin) {
 			throw new NotFoundException("Tài khoản không tồn tại");

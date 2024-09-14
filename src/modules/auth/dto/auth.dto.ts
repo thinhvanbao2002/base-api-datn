@@ -1,10 +1,7 @@
-import {
-	EmailFieldOptional,
-	StringFieldOptional,
-} from "src/common/decorators/field.decorator";
+import { EmailFieldOptional, StringFieldOptional } from "src/common/decorators/field.decorator";
 
 export class AuthPayloadDto {
-	@EmailFieldOptional()
+	@StringFieldOptional()
 	email?: string;
 
 	@StringFieldOptional()

@@ -12,8 +12,6 @@ export class CustomerInfoService {
 	async create(createCustomerInfoDto: CreateCustomerInfoDto, customerId: number) {
 		const { phone, address, is_default, name } = createCustomerInfoDto;
 
-		console.log("name", name);
-
 		await this.customerInfoRepository.sequelize.transaction(async transaction => {
 			if (is_default === true) {
 				await this.customerInfoRepository.update(

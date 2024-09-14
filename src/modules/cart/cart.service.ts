@@ -9,11 +9,20 @@ import { ProductModel } from "../product/model/product.model";
 
 @Injectable()
 export class CartService {
-	constructor(@InjectModel(CartModel) private readonly cartRepository: typeof CartModel) {}
+	constructor(
+		@InjectModel(CartModel) private readonly cartRepository: typeof CartModel,
+		@InjectModel(ProductModel) private readonly productRepository: typeof ProductModel,
+	) {}
 
 	async create(createCartDto: CreateCartDto, req: any) {
 		const { product_id, product_number, total_price } = createCartDto;
 		const customerId = req?.user?.id;
+
+		const foundProduct = await this.productRepository.findByPk(product_id);
+
+		if (foundProduct.quantity <= product_number) {
+			throw new BadRequestException("Sản phẩm không đủ!");
+		}
 
 		if (product_number < 1) {
 			throw new BadRequestException("Số lượng sản phẩm phải lớn hơn 1!");

@@ -87,4 +87,13 @@ export class ProductService {
 	remove(id: number) {
 		return `This action removes a #${id} product`;
 	}
+
+	async findBestSeller() {
+		const products = await this.productRepository.findAll({
+			limit: 4,
+			offset: 1,
+		});
+
+		return products;
+	}
 }

@@ -14,6 +14,11 @@ export class ProductController {
 		return this.productService.create(createProductDto);
 	}
 
+	@Get("best-seller")
+	async findBestSeller() {
+		return await this.productService.findBestSeller();
+	}
+
 	@Get()
 	async findAll(@Query() dto: SearchProductDto) {
 		return await this.productService.findAll(dto);

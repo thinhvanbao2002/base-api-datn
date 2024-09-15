@@ -20,6 +20,7 @@ export class OrderService {
 	constructor(
 		@InjectModel(OrderModel) private readonly orderRp: typeof OrderModel,
 		@InjectModel(OrderDetailModel) private readonly orderDetailRp: typeof OrderDetailModel,
+		@InjectModel(ProductModel) private readonly productRepository: typeof ProductModel,
 	) {}
 
 	async create(createOrderDto: CreateOrderDto, req: any) {
@@ -50,7 +51,14 @@ export class OrderService {
 					};
 				});
 
-				if (payloadOrderItem.length > 0) await this.orderDetailRp.bulkCreate(payloadOrderItem, { transaction });
+				if (payloadOrderItem.length > 0) {
+					await this.orderDetailRp.bulkCreate(payloadOrderItem, { transaction });
+					payloadOrderItem.map(async po => {
+						const foundProduct = await this.productRepository.findByPk(po.product_id);
+						foundProduct.sold += po.quantity;
+						await foundProduct.save();
+					});
+				}
 			}
 		});
 	}

@@ -21,14 +21,18 @@ export class WebsocketGateWay implements OnGatewayConnection, OnGatewayDisconnec
 
 	async handleConnection(socket: Socket) {
 		try {
-			console.log(socket.handshake);
+			console.log(socket.handshake.auth.token);
 
-			console.log("socket connect");
+			console.log("socket connect-----------------------------------");
 			const decodedToken: any = await this.jwtService.decode(socket.handshake.auth.token);
-			socket.handshake.auth.user = decodedToken;
+
+			console.log("decodedToken", decodedToken);
+
+			socket.handshake.auth.token = decodedToken;
 
 			if (decodedToken) {
-				socket.join(`user_${decodedToken.user_id}`);
+				socket.join(`user_${decodedToken.id}`);
+				console.log(`join room user_${decodedToken.id}`);
 			}
 		} catch (error) {
 			socket.handshake.auth.user = null;
@@ -47,6 +51,9 @@ export class WebsocketGateWay implements OnGatewayConnection, OnGatewayDisconnec
 	}
 
 	sendNotification(user_id: string, data: any): void {
-		this.server.to(`user_${user_id}`).emit("notification", { data });
+		console.log("Bắn socket");
+		console.log(user_id);
+
+		this.server.to(`user_${user_id}`).emit("paysuccess", { data });
 	}
 }

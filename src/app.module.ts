@@ -77,6 +77,7 @@ import { TransactionModule } from "./modules/transaction/transaction.module";
 		ProductReviewModule,
 		TransactionModule,
 		OtpModule,
+		WebsocketModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

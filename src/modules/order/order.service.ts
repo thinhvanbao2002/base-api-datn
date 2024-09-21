@@ -24,7 +24,7 @@ export class OrderService {
 	) {}
 
 	async create(createOrderDto: CreateOrderDto, req: any) {
-		const { total_price, items, name, phone, address, note } = createOrderDto;
+		const { total_price, items, name, phone, address, note, pay_type } = createOrderDto;
 		const customerId = req?.user?.id;
 
 		await this.orderRp.sequelize.transaction(async transaction => {
@@ -37,6 +37,7 @@ export class OrderService {
 					phone,
 					address,
 					note,
+					pay_type,
 				},
 				{ transaction },
 			);
@@ -53,11 +54,23 @@ export class OrderService {
 
 				if (payloadOrderItem.length > 0) {
 					await this.orderDetailRp.bulkCreate(payloadOrderItem, { transaction });
-					payloadOrderItem.map(async po => {
-						const foundProduct = await this.productRepository.findByPk(po.product_id);
+					for (const po of payloadOrderItem) {
+						const foundProduct = await this.productRepository.findByPk(po.product_id, { transaction });
+
+						// Kiểm tra xem sản phẩm có đủ số lượng tồn kho hay không
+						if (foundProduct.quantity < po.quantity) {
+							throw new Error(`Sản phẩm ${foundProduct.name} không đủ số lượng tồn kho`);
+						}
+
+						// Trừ số lượng tồn kho của sản phẩm
+						foundProduct.quantity -= po.quantity;
+
+						// Cập nhật số lượng đã bán
 						foundProduct.sold += po.quantity;
-						await foundProduct.save();
-					});
+
+						// Lưu lại các thay đổi
+						await foundProduct.save({ transaction });
+					}
 				}
 			}
 		});

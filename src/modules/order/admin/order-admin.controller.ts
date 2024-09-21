@@ -21,7 +21,12 @@ export class OrderAdminController {
 	}
 
 	@Patch(":id")
-	update(@Param("id") id: number, @Body() dto: UpdateOrderDto) {
+	async update(@Param("id") id: number, @Body() dto: UpdateOrderDto) {
 		return this.orderAdminService.update(+id, dto);
+	}
+
+	@Delete(":id")
+	async delete(@Param("id") id: number) {
+		return this.orderAdminService.delete(+id);
 	}
 }

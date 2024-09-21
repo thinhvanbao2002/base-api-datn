@@ -1,13 +1,13 @@
-import { BooleanFieldOptional, DateFieldOptional } from "src/common/decorators/field.decorator";
+import { BooleanFieldOptional, DateFieldOptional, StringFieldOptional } from "src/common/decorators/field.decorator";
 import { PageOptionsDto } from "src/common/dto/page-option.dto";
 
 export class FilterCustomerDto extends PageOptionsDto {
-	@BooleanFieldOptional()
-	status: string;
+	@StringFieldOptional()
+	status?: string;
 
-	@DateFieldOptional()
-	from_date: Date;
+	@StringFieldOptional()
+	from_date?: string;
 
-	@DateFieldOptional()
-	to_date: Date;
+	@StringFieldOptional()
+	to_date?: string;
 }

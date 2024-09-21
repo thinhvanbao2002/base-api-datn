@@ -46,10 +46,10 @@ import { TransactionModule } from "./modules/transaction/transaction.module";
 				database: configService.get("DB_DATABASE"),
 				models: [join(process.cwd(), "dist/modules/*.model.js")],
 				autoLoadModels: true,
-				// synchronize: true,
-				// sync: {
-				// 	alter: true,
-				// },
+				synchronize: true,
+				sync: {
+					alter: true,
+				},
 			}),
 			inject: [ConfigService],
 		}),

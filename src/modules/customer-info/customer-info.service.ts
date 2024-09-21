@@ -55,18 +55,15 @@ export class CustomerInfoService {
 		return foundCustomerInfo;
 	}
 
-	async update(id: number, updateCustomerInfoDto: UpdateCustomerInfoDto, customerId: number) {
-		const { phone, address, is_default, name } = updateCustomerInfoDto;
-
-		console.log("name", name);
-
+	async update(id: number, dto: UpdateCustomerInfoDto, customerId: number) {
+		const { phone, address, is_default, name } = dto;
 		const foundCustomerInfo = await this.customerInfoRepository.findOne({
 			where: { id: id },
 		});
 		if (!foundCustomerInfo) {
 			throw new NotFoundException(CUSTOMER_INFO_ERR.CUSTOMER_INFO_NOT_FOUND);
 		}
-
+		console.log(foundCustomerInfo);
 		await this.customerInfoRepository.sequelize.transaction(async transaction => {
 			if (is_default === true) {
 				await this.customerInfoRepository.update(

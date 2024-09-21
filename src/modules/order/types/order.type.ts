@@ -6,3 +6,8 @@ export enum OrderType {
 	COMPLETED = "completed",
 	CANCELLED = "cancelled",
 }
+
+export enum PayTypes {
+	PAID = "pay",
+	NOT_PAID = "notpay",
+}

@@ -30,4 +30,7 @@ export class SearchProductDto extends PageOptionsDto {
 
 	@NumberFieldOptional()
 	brand?: number;
+
+	@StringFieldOptional()
+	order_price?: string;
 }

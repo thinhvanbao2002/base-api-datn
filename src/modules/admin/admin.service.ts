@@ -9,6 +9,7 @@ import { WhereOptions } from "sequelize";
 import { Op } from "sequelize";
 import { ADMIN_ERROR } from "./constants/admin.constant";
 import { UpdateAdminDto } from "./dto/update-admin.dto";
+import { UserRoles } from "../user/types/user.type";
 
 @Injectable()
 export class AdminService {
@@ -47,6 +48,8 @@ export class AdminService {
 		if (dateConditions.length > 0) {
 			whereOptions.created_at = { [Op.and]: dateConditions };
 		}
+
+		whereOptions.role = { [Op.or]: [UserRoles.ADMIN, UserRoles.STAFF] };
 
 		const managers = await this.userRepository.findAndCountAll({
 			where: whereOptions,

@@ -26,8 +26,6 @@ export class CustomerAdminService {
 	async getAllCustomer(dto: FilterCustomerDto) {
 		const { q, status, from_date, to_date } = dto;
 
-		console.log(status);
-
 		const whereOptions: WhereOptions = {};
 		const dateConditions = [];
 

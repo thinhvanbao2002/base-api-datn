@@ -13,7 +13,7 @@ import {
 import { CustomerModel } from "src/modules/customer/model/customer.model";
 import { ProductModel } from "src/modules/product/model/product.model";
 import { UserModel } from "src/modules/user/model/user.model";
-import { OrderType } from "../types/order.type";
+import { OrderType, PayTypes } from "../types/order.type";
 import { OrderDetailModel } from "src/modules/order-detail/model/order-detail.model";
 
 @Table({
@@ -70,6 +70,12 @@ export class OrderModel extends Model {
 		type: DataType.TEXT,
 	})
 	note: string;
+
+	@Column({
+		type: DataType.ENUM(...Object.values(PayTypes)),
+		defaultValue: PayTypes.NOT_PAID,
+	})
+	pay_type: number;
 
 	@HasMany(() => OrderDetailModel)
 	order_details: OrderDetailModel[];

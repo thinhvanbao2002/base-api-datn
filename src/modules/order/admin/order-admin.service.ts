@@ -13,6 +13,7 @@ import { CustomerModel } from "src/modules/customer/model/customer.model";
 import { UserModel } from "src/modules/user/model/user.model";
 import { ProductModel } from "src/modules/product/model/product.model";
 import { UpdateOrderDto } from "../dto/update-order.dto";
+import { OrderType, PayTypes } from "../types/order.type";
 
 @Injectable()
 export class OrderAdminService {
@@ -23,8 +24,6 @@ export class OrderAdminService {
 
 	async findAll(dto: SearchOrderAdminDto) {
 		const { order_status, from_date, to_date } = dto;
-
-		console.log(dto);
 
 		const dateConditions = [];
 		const whereOptions: WhereOptions = {};
@@ -74,11 +73,15 @@ export class OrderAdminService {
 	}
 
 	async update(id: number, dto: UpdateOrderDto) {
-		const { order_status } = dto;
+		let { order_status, pay_type } = dto;
 
 		const foundOrder = await this.orderRp.findOne({
 			where: { id: id },
 		});
+
+		if (order_status === OrderType.COMPLETED) {
+			pay_type = PayTypes.PAID;
+		}
 
 		if (!foundOrder) {
 			throw new NotFoundException("Đơn hàng không tồn tại!");
@@ -87,10 +90,25 @@ export class OrderAdminService {
 		await this.orderRp.update(
 			{
 				order_status: order_status,
+				pay_type: pay_type,
 			},
 			{
 				where: { id: id },
 			},
 		);
+	}
+
+	async delete(id: number) {
+		const foundOrder = await this.orderRp.findOne({
+			where: { id: id },
+		});
+
+		if (!foundOrder) {
+			throw new NotFoundException("Không tồn tại đơn hàng!");
+		}
+
+		await this.orderRp.destroy({
+			where: { id },
+		});
 	}
 }

@@ -24,7 +24,7 @@ export class ProductService {
 	}
 
 	async findAll(dto: SearchProductDto) {
-		const { product_type, q, status, from_date, to_date, brand } = dto;
+		const { product_type, q, status, from_date, to_date, brand, order_price } = dto;
 		const whereOptions: WhereOptions = {};
 		const dateConditions = [];
 
@@ -59,7 +59,7 @@ export class ProductService {
 		const products = await this.productRepository.findAndCountAll({
 			where: whereOptions,
 			include: [{ model: CategoryModel }],
-			order: [["created_at", "DESC"]],
+			order: order_price ? [["price", order_price]] : [["created_at", "DESC"]],
 			limit: dto.take,
 			offset: dto.skip,
 		});

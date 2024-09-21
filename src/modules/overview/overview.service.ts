@@ -6,6 +6,7 @@ import { OrderModel } from "../order/model/order.model";
 import { Sequelize } from "sequelize-typescript";
 import { Op } from "sequelize";
 import { GetRevenueByMonthDto } from "./dto/get-revenue-by-month.dto";
+import { OrderType } from "../order/types/order.type";
 
 @Injectable()
 export class OverviewService {
@@ -41,6 +42,7 @@ export class OverviewService {
 				created_at: {
 					[Op.between]: [`${year}-01-01`, `${year}-12-31`],
 				},
+				order_status: OrderType.COMPLETED,
 			},
 			group: ["month"],
 			order: [["month", "ASC"]],
@@ -72,6 +74,7 @@ export class OverviewService {
 				created_at: {
 					[Op.between]: [`${year}-${month}-01`, `${year}-${month}-31`],
 				},
+				order_status: OrderType.COMPLETED,
 			},
 			group: ["day"],
 			order: [["day", "ASC"]],

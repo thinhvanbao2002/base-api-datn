@@ -46,8 +46,11 @@ export class CustomerInfoController {
 	@Put(":id")
 	@Roles(UserRoles.CUSTOMER)
 	@UseGuards(JwtAuthGuard, RolesGuard)
-	async update(@Param("id") id: string, dto: UpdateCustomerInfoDto, @Request() req) {
+	async update(@Param("id") id: number, @Body() dto: UpdateCustomerInfoDto, @Request() req) {
 		const customerId = req?.user?.id;
+
+		console.log(customerId);
+
 		return await this.customerInfoService.update(+id, dto, customerId);
 	}
 }

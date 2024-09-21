@@ -15,7 +15,7 @@ export class AdminController {
 	@Get()
 	@Roles(UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
-	findAll(@Query() dto: AdminPageOptionDto) {
+	async findAll(@Query() dto: AdminPageOptionDto) {
 		return this.adminService.findAll(dto);
 	}
 

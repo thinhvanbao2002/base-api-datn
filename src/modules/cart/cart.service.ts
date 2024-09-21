@@ -61,12 +61,22 @@ export class CartService {
 			where: { id: id },
 		});
 
+		const foundProduct = await this.productRepository.findOne({
+			where: {
+				id: foundCart.product_id,
+			},
+		});
+
 		if (!foundCart) {
 			throw new NotFoundException("Sản phẩm trong giỏ hàng không tồn tại!");
 		}
 
 		// Cập nhật số lượng sản phẩm
 		foundCart.product_number = product_number;
+
+		if (foundCart.product_number > foundProduct.quantity) {
+			throw new BadRequestException("Số lượng sản phẩm không đủ");
+		}
 
 		// Save sẽ gọi các hooks và tính toán lại total_price
 		await foundCart.save();

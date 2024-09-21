@@ -14,6 +14,7 @@ import { CancelOrderDto } from "./dto/cancel-order.dto";
 import { ProductModel } from "../product/model/product.model";
 import { CustomerModel } from "../customer/model/customer.model";
 import { UserModel } from "../user/model/user.model";
+import { CartModel } from "../cart/model/cart.model";
 
 @Injectable()
 export class OrderService {
@@ -21,6 +22,7 @@ export class OrderService {
 		@InjectModel(OrderModel) private readonly orderRp: typeof OrderModel,
 		@InjectModel(OrderDetailModel) private readonly orderDetailRp: typeof OrderDetailModel,
 		@InjectModel(ProductModel) private readonly productRepository: typeof ProductModel,
+		@InjectModel(CartModel) private readonly cartRepository: typeof CartModel,
 	) {}
 
 	async create(createOrderDto: CreateOrderDto, req: any) {
@@ -71,6 +73,11 @@ export class OrderService {
 						// Lưu lại các thay đổi
 						await foundProduct.save({ transaction });
 					}
+
+					await this.cartRepository.destroy({
+						where: { customer_id: customerId, product_id: payloadOrderItem.map(po => po.product_id) },
+						transaction,
+					});
 				}
 			}
 		});

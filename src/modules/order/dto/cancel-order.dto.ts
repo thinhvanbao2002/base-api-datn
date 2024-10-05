@@ -5,5 +5,6 @@ import { CreateOrderDetailDto } from "src/modules/order-detail/dto/create-order-
 
 export class CancelOrderDto {
 	@NumberField()
+	@IsOptional()
 	cancel_reason: number;
 }

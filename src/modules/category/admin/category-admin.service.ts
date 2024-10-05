@@ -87,7 +87,7 @@ export class CategoryAdminService {
 		const dateConditions = [];
 		// console.log(q);
 
-		whereOptions.parent_id = { [Op.ne]: null };
+		whereOptions.parent_id = { [Op.not]: null };
 
 		// if (q) {
 		// 	whereOptions.name = { [Op.like]: `%${q}%` };
@@ -115,6 +115,9 @@ export class CategoryAdminService {
 				{
 					model: CategoryModel,
 					as: "parent",
+					where: {
+						deleted_at: { [Op.eq]: null },
+					},
 				},
 			],
 			limit: dto.take,
@@ -168,6 +171,10 @@ export class CategoryAdminService {
 
 		await this.categoryRepository.destroy({
 			where: { id: categoryId },
+		});
+
+		await this.categoryRepository.destroy({
+			where: { parent_id: categoryId },
 		});
 	}
 }

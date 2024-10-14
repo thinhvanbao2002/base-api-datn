@@ -12,7 +12,7 @@ export class OtpService {
 
 	async generateOtp(dto: CreateOtpDto): Promise<any> {
 		const { phone_number } = dto;
-		const otpCode = Math.floor(100000 + Math.random() * 900000).toString(); // Random OTP 6 số
+		const otpCode = "123456";
 		const expiry = new Date(Date.now() + 5 * 60 * 1000); // OTP hết hạn sau 5 phút
 		const formattedExpiry = this.formatDateToMySQL(expiry);
 
@@ -23,32 +23,9 @@ export class OtpService {
 			attempt_remain: 5,
 		});
 
-		// Gửi OTP qua API
-		const response = await axios.post(
-			"https://api.ezsale.vn/partner/customer/send-message-zns-customer",
-			{
-				customer_info: {
-					name: "go19",
-					phone: phone_number,
-					additional_data: {
-						otp: otpCode,
-					},
-				},
-				zns_message_template_id: 72,
-			},
-			{
-				headers: {
-					Accept: "*/*",
-					// eslint-disable-next-line @typescript-eslint/naming-convention
-					"Content-Type": "application/json",
-					api: "PclF2sjTUQp8NUQb8swmGg",
-				},
-			},
-		);
-
 		return {
 			otp: otpCode,
-			message: response.data.data,
+			// message: response.data.data,
 		};
 	}
 

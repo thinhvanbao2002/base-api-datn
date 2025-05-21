@@ -1,10 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateOtpDto } from "./dto/create-otp.dto";
-import { UpdateOtpDto } from "./dto/update-otp.dto";
 import { OtpModel } from "./model/otp.model";
 import { InjectModel } from "@nestjs/sequelize";
-import axios from "axios";
 import { VerifyOtpDto } from "./dto/verifyotp.dto";
+import axios from "axios";
 
 @Injectable()
 export class OtpService {
@@ -25,7 +24,6 @@ export class OtpService {
 
 		return {
 			otp: otpCode,
-			// message: response.data.data,
 		};
 	}
 
@@ -56,7 +54,6 @@ export class OtpService {
 		} else {
 			await this.otpRepository.destroy({ where: { phone_number: phone_number } });
 		}
-
 		// Xác thực thành công: Xóa OTP
 
 		return true;

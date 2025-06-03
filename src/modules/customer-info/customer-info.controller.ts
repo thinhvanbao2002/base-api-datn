@@ -13,7 +13,7 @@ export class CustomerInfoController {
 	constructor(private readonly customerInfoService: CustomerInfoService) {}
 
 	@Post()
-	@Roles(UserRoles.CUSTOMER)
+	@Roles(UserRoles.CUSTOMER, UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	async create(@Body() createCustomerInfoDto: CreateCustomerInfoDto, @Request() req) {
 		const customerId = req?.user?.id;
@@ -21,7 +21,7 @@ export class CustomerInfoController {
 	}
 
 	@Get()
-	@Roles(UserRoles.CUSTOMER)
+	@Roles(UserRoles.CUSTOMER, UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	async findAll(@Request() req) {
 		const customerId = req?.user?.id;
@@ -30,21 +30,21 @@ export class CustomerInfoController {
 	}
 
 	@Get(":id")
-	@Roles(UserRoles.CUSTOMER)
+	@Roles(UserRoles.CUSTOMER, UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	async findOne(@Param("id") id: string) {
 		return this.customerInfoService.findOne(+id);
 	}
 
 	@Delete(":id")
-	@Roles(UserRoles.CUSTOMER)
+	@Roles(UserRoles.CUSTOMER, UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	async remove(@Param("id") id: string) {
 		return await this.customerInfoService.remove(+id);
 	}
 
 	@Put(":id")
-	@Roles(UserRoles.CUSTOMER)
+	@Roles(UserRoles.CUSTOMER, UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	async update(@Param("id") id: number, @Body() dto: UpdateCustomerInfoDto, @Request() req) {
 		const customerId = req?.user?.id;

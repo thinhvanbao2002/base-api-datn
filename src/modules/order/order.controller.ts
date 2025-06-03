@@ -15,14 +15,14 @@ export class OrderController {
 	constructor(private readonly orderService: OrderService) {}
 
 	@Post()
-	@Roles(UserRoles.CUSTOMER)
+	@Roles(UserRoles.CUSTOMER, UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	async create(@Body() createOrderDto: CreateOrderDto, @Request() req) {
 		return await this.orderService.create(createOrderDto, req);
 	}
 
 	@Get()
-	@Roles(UserRoles.CUSTOMER)
+	@Roles(UserRoles.CUSTOMER, UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	async findAll(@Query() dto: SearchOrderDto, @Request() req) {
 		const orders = await this.orderService.findAll(dto, req);
@@ -30,14 +30,14 @@ export class OrderController {
 	}
 
 	@Get(":id")
-	@Roles(UserRoles.CUSTOMER)
+	@Roles(UserRoles.CUSTOMER, UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	async findOne(@Param("id") id: number) {
 		return await this.orderService.findOne(+id);
 	}
 
 	@Patch(":id")
-	@Roles(UserRoles.CUSTOMER)
+	@Roles(UserRoles.CUSTOMER, UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	async cancelOrder(@Param("id") id: number, @Body() dto: CancelOrderDto) {
 		return this.orderService.cancelOrder(+id, dto);

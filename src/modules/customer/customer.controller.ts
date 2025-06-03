@@ -25,7 +25,7 @@ export class CustomerController {
 	}
 
 	@Put()
-	@Roles(UserRoles.CUSTOMER)
+	@Roles(UserRoles.CUSTOMER, UserRoles.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
 	async update(@Body() updateCustomerDto: UpdateCustomerDto, @Request() req) {
 		console.log("-------------------------------------------------");

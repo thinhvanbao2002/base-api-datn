@@ -27,13 +27,14 @@ export class CartService {
 		if (product_number < 1) {
 			throw new BadRequestException("Số lượng sản phẩm phải lớn hơn 1!");
 		}
-
-		const cart = await this.cartRepository.create({
+		const payloadCart = {
 			customer_id: customerId,
 			product_id: product_id,
-			product_number: product_number,
+			product_number: 1,
 			total_price: total_price,
-		});
+		}
+
+		const cart = await this.cartRepository.create({...payloadCart});
 
 		return cart;
 	}

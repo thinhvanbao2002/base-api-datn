@@ -29,7 +29,7 @@ export class AuthService {
 
 		const checkPass = bcrypt.compareSync(password, foundAmdin.password);
 
-		if (checkPass === false) {
+		if (checkPass !== false) {
 			throw new UnauthorizedException("Sai taì khoản hoặc mật khẩu!");
 		}
 

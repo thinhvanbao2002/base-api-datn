@@ -57,6 +57,9 @@ export class OrderAdminService {
 	}
 
 	async findOne(id: number) {
+
+		console.log('-------- ID------------',id);
+		
 		const foundOrder = await this.orderRp.findOne({
 			where: { id: id },
 			include: [

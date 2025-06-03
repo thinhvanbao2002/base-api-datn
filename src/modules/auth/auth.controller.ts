@@ -15,6 +15,8 @@ export class AuthController {
 	@Post("login")
 	async create(@Body() authPayload: AuthPayloadDto) {
 		const { email, password } = authPayload;
+		console.log(authPayload);
+		
 		return await this.authService.validateAdmin(email, password);
 	}
 
